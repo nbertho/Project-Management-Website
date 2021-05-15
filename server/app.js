@@ -9,6 +9,7 @@ const session = require('express-session');
 // REGISTER ROUTERS
 const usersRouter = require('./routes/users');
 const taskRouter = require('./routes/tasks');
+const helperRouter = require('./routes/helper');
 const testRouter = require('./routes/tests');
 
 
@@ -26,6 +27,7 @@ app.use(session({secret: 'Local Prod Secret', resave: true, saveUninitialized: t
 // ROUTING
 app.use('/api/user', usersRouter);
 app.use('/api/task', taskRouter);
+app.use('/api/helpers', helperRouter);
 app.use('/api/tests', testRouter);
 
 // Catch 404 and forward to error handler
