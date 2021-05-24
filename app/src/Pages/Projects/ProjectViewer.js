@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { Link } from "react-router-dom";
 
 import Menu from '../../components/Projects/List/Menu/Menu'
-import SingleProject from '../../components/Projects/List/SingleProject/SingleProject'
+import ProjectList from "./ProjectList";
+import ProjectDetails from "./ProjectDetails";
 
 class ProjectViewer extends Component {
 
@@ -11,41 +11,30 @@ class ProjectViewer extends Component {
         this.state= {
             projectsData: this.props.projectsData,
             userData: this.props.userData,
-            showProject: false
+            showProject: 0
         }
 
         this.setShowDetails = this.setShowDetails.bind(this);
     }
 
-    setShowDetails(nmbr) {
-        this.setState({showProject: nmbr})
-    }
-
     render() {
 
-        let cssClass = `ProjectIndex ${this.props.cssClass}`;
+        let cssClass = `ProjectViewer ${this.props.cssClass}`;
+        let projectView = "";
 
-        let projectList = this.state.projectsData.map((project) => {
-            return <SingleProject key={project.project_id} value={project} />
-        })
+        if (this.state.showProject === 0) {
+            projectView = <ProjectList userData={this.state.userData} projectsData={this.state.projectsData} />
+        }
+        else {
+            projectView = <ProjectDetails project={this.props.project} userData={this.props.userData} />
+        }
 
         return (
             <div className={cssClass}>
 
                 <Menu/>
 
-                <table className="table table-hover">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {projectList}
-                    </tbody>
-                </table>
+                {projectView}
 
             </div>
         )

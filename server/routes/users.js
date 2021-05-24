@@ -65,9 +65,7 @@ router.post('/login', async (req, res, next) => {
                                             username: dbUsername,
                                             mail: dbEmail,
                                         },
-                                        projectsData: {
-                                            projectResult
-                                        }
+                                        projectsData: projectResult
                                     }
                                 });
                             }
