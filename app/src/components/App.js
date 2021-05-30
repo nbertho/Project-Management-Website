@@ -1,5 +1,5 @@
 import react, {Component} from "react";
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import '../styles/bootstrap.min.css';
 import '../styles/app.css';
 
@@ -39,12 +39,21 @@ class App extends Component {
         let mainContainerCss = ""
 
         let appContent =
-            <ProjectViewer
-                cssClass=""
-                isLogged={this.state.isLogged}
-                userData={this.state.userData}
-                projectsData={this.state.projectsData}
-            />;
+            <Router>
+                <Switch>
+                    <Route path="/login">
+                        <Redirect to="/" />;
+                    </Route>
+                    <Route exact path="/">
+                        <ProjectViewer
+                            cssClass=""
+                            isLogged={this.state.isLogged}
+                            userData={this.state.userData}
+                            projectsData={this.state.projectsData}
+                        />;
+                    </Route>
+                </Switch>
+            </Router>
 
         if (!this.state.isLogged) {
 

@@ -4,10 +4,6 @@ import Title from './Title/Title'
 
 class Header extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
 
 

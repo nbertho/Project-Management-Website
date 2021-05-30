@@ -25,15 +25,15 @@ class Login extends Component {
     }
 
     handleSubmit(event) {
-        console.log('Log in with \n\tmail : ' + this.state.loginMail + "\n\tPwd: " + this.state.loginPwd);
+
         event.preventDefault();
 
         const requestBody = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                mail: this.state.loginMail,
-                pwd: this.state.loginPwd
+                mail: "final_test@gmail.com",//this.state.loginMail,
+                pwd: "azerty"//this.state.loginPwd
             })
         };
 

@@ -7,7 +7,7 @@ const Joi = require('joi');
 // MIDDLEWARES
 
 router.use((req, res, next) => {
-    console.log('REQUEST MADE TO /api/task ROUTE');
+    //console.log('REQUEST MADE TO /api/task ROUTE');
     next();
 })
 
@@ -20,7 +20,7 @@ router.use((req, res, next) => {
  *
  *    Require valid project_id and project_token
  */
-router.get('/show', async (req, res, next) => {
+router.post('/show', async (req, res, next) => {
 
     const schema = Joi.object({
         project_id: Joi.number().required(),
@@ -34,9 +34,8 @@ router.get('/show', async (req, res, next) => {
     } else {
         let projectId = req.body.project_id;
         let projectToken = req.body.project_token;
-
         db.query(
-            "SELECT * FROM tasks JOIN project on tasks.project_id = project.id WHERE tasks.project_id = ? && project.token = ?",
+            "SELECT tasks.id, tasks.token, tasks.name, tasks.description, tasks.estimated_time, tasks.status_id, tasks.parent_tasks_id, tasks.priority, tasks.is_parent FROM tasks JOIN project on tasks.project_id = project.id WHERE tasks.project_id = ? && project.token = ?",
             [projectId, projectToken],
             (err, taskResult, field) => {
                 if (err) {
@@ -113,7 +112,7 @@ router.put('/create', async (req, res, next) => {
 
 
 /**
- * Tasks create route
+ * Tasks update route
  * PATCH => api/task/update
  *
  *    Require valid project_id, project_token, task_name, task_parent
@@ -162,10 +161,57 @@ router.patch('/update', async (req, res, next) => {
                 } else {
                     let sqlInfo = updateResult.info;
                     let sqlId = updateResult.insertId;
-                    res.status(204).json({
+                    res.status(202).json({
                         error: false,
                         msg: "Update successful",
                         content: {"taskId": sqlId, "info": sqlInfo}
+                    });
+                }
+            }
+        )
+    }
+});
+
+
+/**
+ * Tasks status update route
+ * PATCH => api/task/update/status
+ *
+ *    Require valid task_id, task_token, status_id
+ */
+router.patch('/update/status', async (req, res, next) => {
+    const schema = Joi.object({
+        task_id: Joi.number().required(),
+        task_token: Joi.string().required(),
+        status_id: Joi.number().required()
+    });
+    let joiResult = schema.validate(req.body);
+
+    if (joiResult.error) {
+        /** Joi can't validate data **/
+        res.status(401).json({error: true, msg: joiResult.error.message, content: {}});
+    } else {
+        db.query(
+            `
+                UPDATE tasks 
+                SET status_id = ?
+                WHERE (id = ? && token = ? );`
+            ,
+            [
+                req.body.status_id,
+                req.body.task_id,
+                req.body.task_token
+            ],
+            (err, updateResult, field) => {
+                if (err) {
+                    /** SQL Query error **/
+                    res.status(401).json({error: true, msg: err, content: {}});
+                } else {
+                    let sqlInfo = updateResult.info;
+                    res.status(202).json({
+                        error: false,
+                        msg: "Update successful",
+                        content: {"taskId": req.body.status_id, "info": sqlInfo}
                     });
                 }
             }

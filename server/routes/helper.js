@@ -18,7 +18,7 @@ router.use((req, res, next) => {
  */
 router.get('/status', async (req, res, next) => {
 
-    db.query("SELECT * FROM status", (err, result, field) => {
+    db.query("SELECT * FROM status ORDER BY status.order ASC", (err, result, field) => {
         if (err) {
             /** SQL Query error **/
             res.status(401).json({error: true, msg: err, content: {}});

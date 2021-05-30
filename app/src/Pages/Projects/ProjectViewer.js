@@ -10,32 +10,59 @@ class ProjectViewer extends Component {
         super(props);
         this.state= {
             projectsData: this.props.projectsData,
+            statusData: [],
             userData: this.props.userData,
-            showProject: 0
+            showProject: false
         }
 
-        this.setShowDetails = this.setShowDetails.bind(this);
+        this.updateShowProject = this.updateShowProject.bind(this);
+    }
+
+    componentDidMount() {
+        const helperRequestBody = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+        };
+
+        fetch(process.env.REACT_APP_API_URL + "helpers/status", helperRequestBody)
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    this.setState({statusData: data.content.status})
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({error: true})
+                }
+            )
+    }
+
+    updateShowProject(projectId) {
+        this.setState({showProject: projectId});
     }
 
     render() {
 
-        let cssClass = `ProjectViewer ${this.props.cssClass}`;
+        let cssClass = "ProjectViewer pb-4";
         let projectView = "";
 
-        if (this.state.showProject === 0) {
-            projectView = <ProjectList userData={this.state.userData} projectsData={this.state.projectsData} />
+        if (!this.state.showProject) {
+            projectView = <ProjectList userData={this.state.userData} projectsData={this.state.projectsData} updateShowProject={this.updateShowProject} />;
+            cssClass += ` container ${this.props.cssClass}`;
         }
         else {
-            projectView = <ProjectDetails project={this.props.project} userData={this.props.userData} />
+            let project = this.props.projectsData.find( project => project.project_id === this.state.showProject )
+            projectView = <ProjectDetails project={project} userData={this.props.userData} statusData={this.state.statusData} />;
+            cssClass += ` mx-4 ${this.props.cssClass}`;
         }
 
         return (
             <div className={cssClass}>
 
-                <Menu/>
-
+                <Menu showProject={this.state.showProject} updateShowProject={this.updateShowProject} />
+                <br/>
                 {projectView}
-
+                <br/>
             </div>
         )
 

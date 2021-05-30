@@ -1,4 +1,4 @@
-import react, {Component} from "react";
+import react from "react";
 
 const Footer = (props) => {
 

@@ -1,11 +1,6 @@
 import react, {Component} from "react";
-import {BrowserRouter, Link} from "react-router-dom";
 
 class Title extends Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     render() {
 

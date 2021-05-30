@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 // MIDDLEWARES
 
 router.use((req, res, next) => {
-    console.log('REQUEST MADE TO /api/tests ROUTE');
+    //console.log('REQUEST MADE TO /api/tests ROUTE');
     next();
 })
 

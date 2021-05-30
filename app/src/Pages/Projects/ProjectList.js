@@ -14,14 +14,14 @@ class ProjectList extends Component {
 
     render() {
 
-        let cssClass = `ProjectIndex ${this.props.cssClass}`;
+        let cssClass = `ProjectList ${this.props.cssClass}`;
 
         let projectList = this.state.projectsData.map((project) => {
-            return <SingleProject key={project.project_id} value={project} />
+            return <SingleProject key={project.project_id} value={project} updateShowProject={this.props.updateShowProject} />
         })
 
         return (
-            <div className="ProjectList">
+            <div className={cssClass}>
 
                 <table className="table table-hover">
                     <thead className="thead-dark">
