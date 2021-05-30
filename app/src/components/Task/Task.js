@@ -2,7 +2,7 @@ import react, {Component} from "react";
 import React from "react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowLeft, faArrowRight, faCog, faCheck, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeft, faArrowRight, faCog, faCheck, faTrash, faChevronDown, faChevronUp} from "@fortawesome/free-solid-svg-icons";
 
 class Task extends Component {
 
@@ -22,7 +22,8 @@ class Task extends Component {
             task_priority: this.props.taskData.priority,
             task_status_id: this.props.taskData.status_id,
             updatePending: false,
-            dataHasChanged: false
+            dataHasChanged: false,
+            collapse: false
         }
 
         this.decrementTaskStatus = this.decrementTaskStatus.bind(this);
@@ -32,7 +33,12 @@ class Task extends Component {
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handlePriorityChange = this.handlePriorityChange.bind(this);
         this.handleEtChange = this.handleEtChange.bind(this);
+        this.toggleCollapse = this.toggleCollapse.bind(this);
 
+    }
+
+    toggleCollapse() {
+        this.setState({collapse: !this.state.collapse})
     }
 
     handleNameChange(event) {
@@ -46,6 +52,7 @@ class Task extends Component {
     handlePriorityChange(event) {
         this.setState({task_priority: event.target.value, dataHasChanged: true});
     }
+
     handleEtChange(event) {
         this.setState({task_et: event.target.value, dataHasChanged: true});
     }
@@ -175,42 +182,59 @@ class Task extends Component {
             nameContent = <input id="task_name" className="py-2" name="task_name" value={this.state.task_name} type="text" onChange={this.handleNameChange} />
         }
 
+        // Collapse Action
+        let collapseAction = <FontAwesomeIcon icon={faChevronDown} />
+        let cssContent = "";
+
+        if (this.state.collapse) {
+            collapseAction = <FontAwesomeIcon icon={faChevronUp} />
+            cssContent = "d-none";
+        }
+
         return (
             <div className="row mb-2">
 
                 <article className={cssClass}>
 
-                    <div className="text-right">
-                        <FontAwesomeIcon className="mx-3" icon={faTrash} />
-                        {changeIcon}
+                    <div className="d-flex justify-content-between pt-2">
+                        <button className="btn btn-light" onClick={this.toggleCollapse}>
+                            {collapseAction}
+                        </button>
+                        <div className="text-right">
+                            <FontAwesomeIcon className="mx-3 mt-2" icon={faTrash} />
+                            {changeIcon}
+                        </div>
                     </div>
 
                     {nameContent}
 
-                    <div className="TaskDescription">
-                        {descriptionContent}
+                    <div className={cssContent}>
+                        <div className="TaskDescription">
+                            {descriptionContent}
+                        </div>
+
+                        <div className="TaskInfo my-4 row">
+                            <div className="col-6">
+                                <p>Estimated-time</p>
+                                {etContent}
+                            </div>
+                            <div className="col-6">
+                                <p>Priority</p>
+                                {priorityContent}
+                            </div>
+                        </div>
+
+                        <div className="d-flex my-2 justify-content-around">
+                            <button className="btn btn-light" onClick={this.decrementTaskStatus}>
+                                <FontAwesomeIcon icon={faArrowLeft} />
+                            </button>
+                            <div>&nbsp;</div>
+                            <button className="btn btn-light" onClick={this.incrementTaskStatus}>
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="TaskInfo my-4 row">
-                        <div className="col-6">
-                            <p>Estimated-time</p>
-                            {etContent}
-                        </div>
-                        <div className="col-6">
-                            <p>Priority</p>
-                            {priorityContent}
-                        </div>
-                    </div>
-
-                    <div className="d-flex my-2 justify-content-around">
-                        <button className="btn btn-light" onClick={this.decrementTaskStatus}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </button>
-                        <div>&nbsp;</div>
-                        <button className="btn btn-light" onClick={this.incrementTaskStatus}>
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-                    </div>
                 </article>
             </div>
         );
