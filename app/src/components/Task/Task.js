@@ -2,8 +2,7 @@ import react, {Component} from "react";
 import React from "react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
-import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeft, faArrowRight, faCog, faCheck, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 class Task extends Component {
 
@@ -15,25 +14,96 @@ class Task extends Component {
         this.state = {
             error: false,
             statusData: statusData,
-            task: this.props.taskData,
+            task_id: this.props.taskData.id,
+            task_token: this.props.taskData.token,
+            task_name: this.props.taskData.name,
+            task_description: this.props.taskData.description,
+            task_et: this.props.taskData.estimated_time,
+            task_priority: this.props.taskData.priority,
+            task_status_id: this.props.taskData.status_id,
+            updatePending: false,
+            dataHasChanged: false
         }
 
         this.decrementTaskStatus = this.decrementTaskStatus.bind(this);
         this.incrementTaskStatus = this.incrementTaskStatus.bind(this);
+        this.updateTask = this.updateTask.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+        this.handlePriorityChange = this.handlePriorityChange.bind(this);
+        this.handleEtChange = this.handleEtChange.bind(this);
 
     }
 
-    decrementTaskStatus() {
+    handleNameChange(event) {
+        this.setState({task_name: event.target.value, dataHasChanged: true});
+    }
 
-        let newStatusId = this.props.taskData.status_id--;
+    handleDescriptionChange(event) {
+        this.setState({task_description: event.target.value, dataHasChanged: true});
+    }
 
-        if (newStatusId > 0 && newStatusId < this.props.statusData.length) {
+    handlePriorityChange(event) {
+        this.setState({task_priority: event.target.value, dataHasChanged: true});
+    }
+    handleEtChange(event) {
+        this.setState({task_et: event.target.value, dataHasChanged: true});
+    }
+
+    updateTask() {
+
+        if (this.state.dataHasChanged && this.state.updatePending) {
+
             const taskRequestBody = {
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    task_id: this.state.task.id,
-                    task_token: this.state.task.token,
+                    task_id: this.state.task_id,
+                    task_token: this.state.task_token,
+                    task_name: this.state.task_name,
+                    task_description: this.state.task_description,
+                    task_et: this.state.task_et,
+                    task_priority: this.state.task_priority
+                })
+            };
+
+            fetch(process.env.REACT_APP_API_URL + "task/update", taskRequestBody)
+                .then(response => response.json())
+                .then(
+                    (data) => {
+                        console.log(data);
+                    },
+                    (error) => {
+                        console.log(error)
+                        this.setState({error: true})
+                    }
+                )
+
+            this.setState({updatePending: !this.state.updatePending, dataHasChanged: false})
+        }
+        else {
+            this.setState({updatePending: !this.state.updatePending})
+        }
+
+    }
+
+    decrementTaskStatus() {
+        if (typeof this.state.task_status_id === 'undefined') {
+            this.setState({task_status_id: this.props.taskData.status_id})
+        }
+        let statusId = this.state.task_status_id;
+        let newStatusId = statusId - 1;
+
+        if (newStatusId > 0 && newStatusId < this.props.statusData.length) {
+
+            this.setState({task_status_id: newStatusId});
+
+            const taskRequestBody = {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    task_id: this.state.task_id,
+                    task_token: this.state.task_token,
                     status_id: newStatusId
                 })
             };
@@ -55,15 +125,22 @@ class Task extends Component {
     }
 
     incrementTaskStatus() {
-        let newStatusId = this.props.taskData.status_id++;
+        if (typeof this.state.status_id === 'undefined') {
+            this.setState({task_status_id: this.props.taskData.status_id})
+        }
+        let statusId = this.state.task_status_id;
+        let newStatusId = statusId + 1;
 
-        if (newStatusId > 0 && newStatusId < this.props.statusData.length) {
+        if (newStatusId > 0 && newStatusId <= this.props.statusData.length) {
+
+            this.setState({task_status_id: newStatusId});
+
             const taskRequestBody = {
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    task_id: this.state.task.id,
-                    task_token: this.state.task.token,
+                    task_id: this.state.task_id,
+                    task_token: this.state.task_token,
                     status_id: newStatusId
                 })
             };
@@ -73,7 +150,7 @@ class Task extends Component {
                 .then(
                     (data) => {
                         this.setState({statusData: this.props.statusData.find(stat => stat.id === newStatusId)})
-                        console.log(data);
+                        //console.log(data);
                     },
                     (error) => {
                         console.log(error)
@@ -85,12 +162,17 @@ class Task extends Component {
 
     render() {
 
-        let cssClass = `Task card col-2 offset-${this.state.task.status_id * 2 - 2}`;
+        let cssClass = `Task card col-2 offset-${this.state.task_status_id * 2 - 2}`;
+        let changeIcon = <FontAwesomeIcon className="mt-2" icon={faCog} onClick={this.updateTask} />;
+        let descriptionContent = <p className="card-text">{this.state.task_description}</p>
+        let nameContent = <h5 className="py-2" style={{borderBottom: "3px solid " + this.state.statusData.color}}>{this.state.task_name}</h5>
+        let etContent = <input className="w-100" id="task_et" name="task_et" value={this.state.task_et ?? undefined} type="number" onChange={this.handleEtChange} />
+        let priorityContent = <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority ?? undefined} type="number" onChange={this.handlePriorityChange} />
 
-        let currentStatus = this.props.statusData;
-
-        if ( currentStatus < this.props.statusData.length) {
-
+        if (this.state.updatePending) {
+            changeIcon = <FontAwesomeIcon className="mt-2" color="green" icon={faCheck} onClick={this.updateTask} />;
+            descriptionContent = <input className="w-100 my-2" id="task_description" name="task_description" value={this.state.task_description} type="text" onChange={this.handleDescriptionChange} />
+            nameContent = <input id="task_name" className="py-2" name="task_name" value={this.state.task_name} type="text" onChange={this.handleNameChange} />
         }
 
         return (
@@ -98,36 +180,36 @@ class Task extends Component {
 
                 <article className={cssClass}>
 
-                    <h5
-                        className="card-title py-2"
-                        style={{borderBottom: "3px solid " + this.state.statusData.color}}
-                    >
-                        {this.state.task.name}
-                    </h5>
-
-                    <div className="TaskDescription">
-                        <p className="card-text">{this.state.task.description}</p>
+                    <div className="text-right">
+                        <FontAwesomeIcon className="mx-3" icon={faTrash} />
+                        {changeIcon}
                     </div>
 
-                    <div className="TaskInfo">
-                        <div>
-                            {this.state.task.estimated_time}
+                    {nameContent}
+
+                    <div className="TaskDescription">
+                        {descriptionContent}
+                    </div>
+
+                    <div className="TaskInfo my-4 row">
+                        <div className="col-6">
+                            <p>Estimated-time</p>
+                            {etContent}
                         </div>
-                        <div>
-                            {this.state.task.priority}
+                        <div className="col-6">
+                            <p>Priority</p>
+                            {priorityContent}
                         </div>
                     </div>
 
                     <div className="d-flex my-2 justify-content-around">
-                        <div className="border border-dark py-2 px-4 cursor-hover">
-                            <FontAwesomeIcon onClick={this.decrementTaskStatus} icon={faArrowLeft} />
-                        </div>
-                        <div>
-                        </div>
-                        <div className="border border-dark py-2 px-4 cursor-hover">
-                            <FontAwesomeIcon onClick={this.incrementTaskStatus} icon={faArrowRight} />
-                        </div>
-
+                        <button className="btn btn-light" onClick={this.decrementTaskStatus}>
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                        <div>&nbsp;</div>
+                        <button className="btn btn-light" onClick={this.incrementTaskStatus}>
+                            <FontAwesomeIcon icon={faArrowRight} />
+                        </button>
                     </div>
                 </article>
             </div>

@@ -45,6 +45,7 @@ class ProjectViewer extends Component {
 
         let cssClass = "ProjectViewer pb-4";
         let projectView = "";
+        let projectTitle = "";
 
         if (!this.state.showProject) {
             projectView = <ProjectList userData={this.state.userData} projectsData={this.state.projectsData} updateShowProject={this.updateShowProject} />;
@@ -52,6 +53,7 @@ class ProjectViewer extends Component {
         }
         else {
             let project = this.props.projectsData.find( project => project.project_id === this.state.showProject )
+            projectTitle = project.name;
             projectView = <ProjectDetails project={project} userData={this.props.userData} statusData={this.state.statusData} />;
             cssClass += ` mx-4 ${this.props.cssClass}`;
         }
@@ -59,7 +61,7 @@ class ProjectViewer extends Component {
         return (
             <div className={cssClass}>
 
-                <Menu showProject={this.state.showProject} updateShowProject={this.updateShowProject} />
+                <Menu projectTitle={projectTitle} showProject={this.state.showProject} updateShowProject={this.updateShowProject} />
                 <br/>
                 {projectView}
                 <br/>

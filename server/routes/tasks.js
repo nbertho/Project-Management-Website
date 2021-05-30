@@ -35,7 +35,7 @@ router.post('/show', async (req, res, next) => {
         let projectId = req.body.project_id;
         let projectToken = req.body.project_token;
         db.query(
-            "SELECT tasks.id, tasks.token, tasks.name, tasks.description, tasks.estimated_time, tasks.status_id, tasks.parent_tasks_id, tasks.priority, tasks.is_parent FROM tasks JOIN project on tasks.project_id = project.id WHERE tasks.project_id = ? && project.token = ?",
+            "SELECT tasks.id, tasks.token, tasks.name, tasks.description, tasks.estimated_time, tasks.status_id, tasks.priority FROM tasks JOIN project on tasks.project_id = project.id WHERE tasks.project_id = ? && project.token = ?",
             [projectId, projectToken],
             (err, taskResult, field) => {
                 if (err) {
@@ -115,7 +115,7 @@ router.put('/create', async (req, res, next) => {
  * Tasks update route
  * PATCH => api/task/update
  *
- *    Require valid project_id, project_token, task_name, task_parent
+ *    Require valid project_id, project_token, task_name
  *    Optional task_description, task_et
  */
 router.patch('/update', async (req, res, next) => {
@@ -123,10 +123,9 @@ router.patch('/update', async (req, res, next) => {
         task_id: Joi.number().required(),
         task_token: Joi.string().required(),
         task_name: Joi.string().required(),
-        task_parent: Joi.number().required(),
         task_description: Joi.string().required(),
-        task_et: Joi.number().required(),
-        status_id: Joi.number().required()
+        task_et: Joi.number(),
+        task_priority: Joi.number()
     });
     let joiResult = schema.validate(req.body);
 
@@ -141,16 +140,14 @@ router.patch('/update', async (req, res, next) => {
                 name = ?,
                 description = ?,
                 estimated_time = ?,
-                status_id = ?,
-                parent_tasks_id = ?
+                priority = ?
                 WHERE (id = ? && token = ? );`
             ,
             [
                 req.body.task_name,
                 req.body.task_description,
                 req.body.task_et,
-                req.body.status_id,
-                req.body.task_parent,
+                req.body.task_priority,
                 req.body.task_id,
                 req.body.task_token
             ],
@@ -248,7 +245,6 @@ router.delete('/delete', async (req, res, next) => {
                 } else if (deleteResult.affectedRows === 0) {
                     res.status(401).json({error: true, msg: "Task not found", content: {"task_id": req.body.task_id}});
                 } else {
-                    console.log(deleteResult);
                     res.status(200).json({
                         error: false,
                         msg: "Delete Successfull",

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faQuestion} from "@fortawesome/free-solid-svg-icons";
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 
 import Task from "../../components/Task/Task";
@@ -48,8 +47,10 @@ class ProjectDetails extends Component {
 
         let statusTable = this.state.statusData.map((status) => {
             return (
-                <div key={status.id} className="col-2 font-weight-bold">
-                    {status.name} <FontAwesomeIcon data-bs-toggle="tooltip" data-bs-placement="bottom" title={status.description} icon={faQuestionCircle} />
+                <div key={status.id} className="col-2 font-weight-bold container">
+                    <h5 className="pb-1 text-center" style={{borderBottom: "3px solid " + status.color}}>
+                        {status.name} <FontAwesomeIcon data-bs-toggle="tooltip" data-bs-placement="bottom" title={status.description} icon={faQuestionCircle} />
+                    </h5>
                 </div>
             )
         })

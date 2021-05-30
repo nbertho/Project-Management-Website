@@ -6,7 +6,6 @@ class Menu extends Component {
 
     constructor(props) {
         super(props);
-
         this.returnToProjectIndex = this.returnToProjectIndex.bind(this);
     }
 
@@ -17,14 +16,18 @@ class Menu extends Component {
 
     render() {
 
-        let cssClass = "Menu mt-2";
+        let cssClass = "Menu mt-2 container mx-auto row";
 
         if (this.props.showProject !== false) {
             return (
                 <div className={cssClass}>
-                    <p className="cursor-hover" onClick={this.returnToProjectIndex}>
+                    <p className="cursor-hover col-4" onClick={this.returnToProjectIndex}>
                         <FontAwesomeIcon icon={faArrowLeft} /> Back to project list
                     </p>
+                    <h3 className="text-center col-4">
+                        {this.props.projectTitle}
+                    </h3>
+                    <div className="col-4">&nbsp;</div>
                 </div>
             );
         }
