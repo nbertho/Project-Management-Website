@@ -10,6 +10,7 @@ class SingleProject extends Component {
         this.state = {
             updatePending: false,
             dataHasChanged: false,
+            isShown: true,
             project_id: this.props.project.project_id,
             project_token: this.props.project.token,
             project_name: this.props.project.name,
@@ -21,6 +22,7 @@ class SingleProject extends Component {
         this.toggleUpdate = this.toggleUpdate.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+        this.handleDeleteProject = this.handleDeleteProject.bind(this);
     }
 
     handleNameChange(e) {
@@ -29,6 +31,35 @@ class SingleProject extends Component {
 
     handleDescriptionChange(e) {
         this.setState({project_description: e.target.value, dataHasChanged: true});
+    }
+
+    handleDeleteProject() {
+        let deleteConfirmed = window.confirm(`Are you sure you want to delete the project : ${this.state.project_name}?`);
+        if (deleteConfirmed) {
+            const taskRequestBody = {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    project_id: this.state.project_id,
+                    project_token: this.state.project_token
+                })
+            };
+
+            fetch(process.env.REACT_APP_API_URL + "project/delete", taskRequestBody)
+                .then(response => response.json())
+                .then(
+                    (data) => {
+                        console.log(data);
+                        if (!data.error) {
+                            this.setState({updatePending: !this.state.updatePending, isShown: false});
+                        }
+                    },
+                    (error) => {
+                        console.log(error)
+                        this.setState({error: true})
+                    }
+                )
+        }
     }
 
     toggleUpdate() {
@@ -83,16 +114,24 @@ class SingleProject extends Component {
             updateButton = <FontAwesomeIcon icon={faCheck} color="green" />;
         }
 
-        return (
-            <tr className="SingleProject">
-                <td onClick={this.showProject}>{nameData}</td>
-                <td onClick={this.showProject}>{descriptionData}</td>
-                <td className="d-flex justify-content-around">
-                    <button onClick={this.toggleUpdate} className="btn btn-light">{updateButton}</button>
-                    <button className="btn btn-light"><FontAwesomeIcon icon={faTrash} /></button>
-                </td>
-            </tr>
-        );
+        if (this.state.isShown) {
+            return (
+                <tr className="SingleProject">
+                    <td onClick={this.showProject}>{nameData}</td>
+                    <td onClick={this.showProject}>{descriptionData}</td>
+                    <td className="d-flex justify-content-around">
+                        <button onClick={this.toggleUpdate} className="btn btn-light">{updateButton}</button>
+                        <button onClick={this.handleDeleteProject} className="btn btn-light"><FontAwesomeIcon icon={faTrash} /></button>
+                    </td>
+                </tr>
+            );
+        }
+        else {
+            return (
+                <tr className="d-none"/>
+            );
+        }
+
     }
 
 }

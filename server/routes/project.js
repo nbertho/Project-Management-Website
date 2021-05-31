@@ -161,7 +161,7 @@ router.delete('/delete', async (req, res, next) => {
         res.status(401).json({error: true, msg: joiResult.error.message, content: {}});
     } else {
         db.query(
-            "DELETE FROM project WHERE (id = ? && token = ?);",
+            "UPDATE project SET active = 0 WHERE (id = ? && token = ?);",
             [req.body.project_id, req.body.project_token],
             (err, deleteResult, field) => {
                 if (err) {

@@ -49,7 +49,7 @@ router.post('/login', async (req, res, next) => {
                 bcrypt.compare(password, dbPassword).then((result) => {
                     if (result) {
                         db.query(
-                            'SELECT project_id, name, description, status_id, token FROM users_has_project JOIN project on users_has_project.project_id = project.id WHERE users_id = ?;',
+                            'SELECT project_id, name, description, status_id, token FROM users_has_project JOIN project on users_has_project.project_id = project.id WHERE ( users_id = ? && active = 1 );',
                             dbId,
                             (err, projectResult, field) => {
                                 if (err) {
