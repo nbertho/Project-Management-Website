@@ -17,7 +17,7 @@ class ProjectList extends Component {
         let cssClass = `ProjectList ${this.props.cssClass}`;
 
         let projectList = this.state.projectsData.map((project) => {
-            return <SingleProject key={project.project_id} value={project} updateShowProject={this.props.updateShowProject} />
+            return <SingleProject key={project.project_id} project={project} updateShowProject={this.props.updateShowProject} />
         })
 
         return (
@@ -26,9 +26,9 @@ class ProjectList extends Component {
                 <table className="table table-hover">
                     <thead className="thead-dark">
                     <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">Name</th>
                         <th scope="col">Description</th>
+                        <th className="text-center" scope="col">Actions</th>
                     </tr>
                     </thead>
                     <tbody>

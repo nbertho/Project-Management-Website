@@ -44,11 +44,12 @@ router.post('/login', async (req, res, next) => {
                 dbPassword = result[0]["password"];
                 dbUsername = result[0]["name"];
                 dbEmail = result[0]["email"];
+                dbToken = result[0]["token"];
                 dbId = result[0]["id"];
                 bcrypt.compare(password, dbPassword).then((result) => {
                     if (result) {
                         db.query(
-                            'SELECT project_id, name, description, token FROM users_has_project JOIN project on users_has_project.project_id = project.id WHERE users_id = ?;',
+                            'SELECT project_id, name, description, status_id, token FROM users_has_project JOIN project on users_has_project.project_id = project.id WHERE users_id = ?;',
                             dbId,
                             (err, projectResult, field) => {
                                 if (err) {
@@ -64,6 +65,7 @@ router.post('/login', async (req, res, next) => {
                                             id: dbId,
                                             username: dbUsername,
                                             mail: dbEmail,
+                                            token: dbToken
                                         },
                                         projectsData: projectResult
                                     }

@@ -10,6 +10,7 @@ const cors = require('cors');
 // REGISTER ROUTERS
 const usersRouter = require('./routes/users');
 const taskRouter = require('./routes/tasks');
+const projectRouter = require('./routes/project');
 const helperRouter = require('./routes/helper');
 const testRouter = require('./routes/tests');
 
@@ -29,6 +30,7 @@ app.use(session({secret: 'Local Prod Secret', resave: true, saveUninitialized: t
 // ROUTING
 app.use('/api/user', usersRouter);
 app.use('/api/task', taskRouter);
+app.use('/api/project', projectRouter);
 app.use('/api/helpers', helperRouter);
 app.use('/api/tests', testRouter);
 
