@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import SingleProject from '../../components/Projects/List/SingleProject/SingleProject'
+import NewProject from "../../components/Projects/List/SingleProject/NewProject";
 
 class ProjectList extends Component {
 
@@ -10,6 +11,12 @@ class ProjectList extends Component {
             projectsData: this.props.projectsData,
             userData: this.props.userData,
         }
+        this.addProject = this.addProject.bind(this);
+    }
+
+    addProject(projectData) {
+        let newProjectData = [...this.state.projectsData, projectData];
+        this.setState({projectsData: newProjectData})
     }
 
     render() {
@@ -19,6 +26,8 @@ class ProjectList extends Component {
         let projectList = this.state.projectsData.map((project) => {
             return <SingleProject key={project.project_id} project={project} updateShowProject={this.props.updateShowProject} removeProject={this.removeProject} />
         })
+
+        let newProject = <NewProject userData={this.props.userData} addProject={this.addProject} />
 
         return (
             <div className={cssClass}>
@@ -32,6 +41,7 @@ class ProjectList extends Component {
                     </tr>
                     </thead>
                     <tbody>
+                        {newProject}
                         {projectList}
                     </tbody>
                 </table>

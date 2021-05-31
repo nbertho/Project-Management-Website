@@ -1,6 +1,6 @@
 import react, {Component} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCog, faTrash, faCheck} from "@fortawesome/free-solid-svg-icons";
+import {faCog, faTrash, faCheck, faUndo} from "@fortawesome/free-solid-svg-icons";
 
 class SingleProject extends Component {
 
@@ -23,6 +23,7 @@ class SingleProject extends Component {
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handleDeleteProject = this.handleDeleteProject.bind(this);
+        this.removeUpdate = this.removeUpdate.bind(this);
     }
 
     handleNameChange(e) {
@@ -60,6 +61,19 @@ class SingleProject extends Component {
                     }
                 )
         }
+    }
+
+    removeUpdate() {
+
+        this.setState({
+            updatePending: false,
+            dataHasChanged: false,
+            project_id: this.props.project.project_id,
+            project_token: this.props.project.token,
+            project_name: this.props.project.name,
+            project_description: this.props.project.description,
+            project_status: this.props.project.status_id
+        })
     }
 
     toggleUpdate() {
@@ -106,12 +120,20 @@ class SingleProject extends Component {
 
         let nameData = this.state.project_name;
         let descriptionData = this.state.project_description;
-        let updateButton = <FontAwesomeIcon icon={faCog} />;
+        let actions =
+            <td className="d-flex justify-content-around">
+                <button onClick={this.toggleUpdate} className="btn btn-light"><FontAwesomeIcon icon={faCog} /></button>
+                <button onClick={this.handleDeleteProject} className="btn btn-light"><FontAwesomeIcon icon={faTrash} /></button>
+            </td>;
 
         if (this.state.updatePending) {
             nameData = <input id="project_name" name="project_name" value={this.state.project_name} type="text" onChange={this.handleNameChange}/>;
             descriptionData = <input id="project_description" name="project_description" value={this.state.project_description} type="text" onChange={this.handleDescriptionChange}/>;
-            updateButton = <FontAwesomeIcon icon={faCheck} color="green" />;
+            actions =
+                <td className="d-flex justify-content-around">
+                    <button onClick={this.toggleUpdate} className="btn btn-success"><FontAwesomeIcon icon={faCheck} /></button>
+                    <button onClick={this.removeUpdate} className="btn btn-danger"><FontAwesomeIcon icon={faUndo} /></button>
+                </td>;
         }
 
         if (this.state.isShown) {
@@ -119,10 +141,7 @@ class SingleProject extends Component {
                 <tr className="SingleProject">
                     <td onClick={this.showProject}>{nameData}</td>
                     <td onClick={this.showProject}>{descriptionData}</td>
-                    <td className="d-flex justify-content-around">
-                        <button onClick={this.toggleUpdate} className="btn btn-light">{updateButton}</button>
-                        <button onClick={this.handleDeleteProject} className="btn btn-light"><FontAwesomeIcon icon={faTrash} /></button>
-                    </td>
+                    {actions}
                 </tr>
             );
         }
