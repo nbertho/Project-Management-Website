@@ -92,6 +92,10 @@ class ProjectDetails extends Component {
             tasksList.sort(this.sortArrayByPriority);
         }
 
+        if (this.props.filter.order === 'desc') {
+            tasksList.reverse();
+        }
+
         let taskInTable = tasksList.map((task) => {
             return <Task key={task.id} taskData={task} statusData={this.state.statusData} />
         })

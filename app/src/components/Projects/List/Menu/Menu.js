@@ -70,8 +70,6 @@ class Menu extends Component {
                         {this.props.projectTitle}
                     </h3>
                     <div className="col-4 d-flex justify-content-around">
-
-
                         <h4>Filter by :</h4>
                         <select id="task-filter-value" onChange={this.handleValueChange}
                                 value={this.state.optionSelected}>
@@ -81,7 +79,6 @@ class Menu extends Component {
                             <option key="asc" value="asc">Asc</option>
                             <option key="desc" value="desc">Desc</option>
                         </select>
-
                     </div>
                 </div>
             );

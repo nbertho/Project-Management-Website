@@ -53,7 +53,7 @@ class ProjectViewer extends Component {
     }
 
     updateFilter(newState) {
-        this.setState({orderFilter: newState})
+        this.setState({orderFilter: newState});
     }
 
     render() {
