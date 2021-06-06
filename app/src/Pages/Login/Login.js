@@ -41,8 +41,13 @@ class Login extends Component {
             .then(response => response.json())
             .then(
                 (data) => {
-                    this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
-                    this.props.updateAfterLogin(data.content.userData, data.content.projectsData , true);
+                    if (!data.error) {
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
+                        this.props.updateAfterLogin(data.content.userData, data.content.projectsData , true);
+                    }
+                    else {
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
+                    }
                 },
                 (error) => {
                     this.props.updateDisplayMessage({empty: false, error: true, content: error});

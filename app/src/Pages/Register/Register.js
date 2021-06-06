@@ -9,16 +9,23 @@ class Register extends Component {
         super(props);
         this.state = {
             passwordType: 'password',
+            passwordVerifyType: 'password',
             registrationSuccess: false,
             userEmail: "",
             userName: "",
             userPwd: "",
+            userPwdVerify: "",
+            passwordValid: false,
+            passwordMessage: ""
         }
 
         this.togglePasswordType = this.togglePasswordType.bind(this);
+        this.togglePasswordVerifyType = this.togglePasswordVerifyType.bind(this);
         this.handleMailChange = this.handleMailChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handlePwdChange = this.handlePwdChange.bind(this);
+        this.handlePwdVerifyChange = this.handlePwdVerifyChange.bind(this);
+        this.checkPwd = this.checkPwd.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -31,6 +38,23 @@ class Register extends Component {
         }
     }
 
+    togglePasswordVerifyType() {
+        if (this.state.passwordVerifyType === "password") {
+            this.setState({passwordVerifyType: "text"})
+        }
+        else {
+            this.setState({passwordVerifyType: "password"})
+        }
+    }
+
+    checkPwd() {
+
+        if (this.state.userPwd === this.state.userPwdVerify) {
+            this.setState({passwordValid: true, passwordMessage: ""})
+        }
+
+    }
+
     handleMailChange(event) {
         this.setState({userEmail: event.target.value});
     }
@@ -40,36 +64,52 @@ class Register extends Component {
     }
 
     handlePwdChange(event) {
-        this.setState({userPwd: event.target.value});
+        this.setState(
+            {userPwd: event.target.value},
+            () => {
+                this.checkPwd();
+            }
+        );
+    }
+
+    handlePwdVerifyChange(event) {
+        this.setState(
+            {userPwdVerify: event.target.value},
+            () => {
+                this.checkPwd();
+            }
+        );
     }
 
     handleSubmit(event) {
         event.preventDefault();
 
-        const requestBody = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                mail: this.state.userEmail,
-                name: this.state.userName,
-                pwd: this.state.userPwd
-            })
-        };
+        if (this.state.passwordValid) {
+            const requestBody = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    mail: this.state.userEmail,
+                    name: this.state.userName,
+                    pwd: this.state.userPwd
+                })
+            };
 
-        fetch(process.env.REACT_APP_API_URL + "user/register", requestBody)
-            .then(response => response.json())
-            .then(
-                (data) => {
-                    this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
-                    if (!data.error) {
-                        this.setState({registrationSuccess: true})
+            fetch(process.env.REACT_APP_API_URL + "user/register", requestBody)
+                .then(response => response.json())
+                .then(
+                    (data) => {
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
+                        if (!data.error) {
+                            this.setState({registrationSuccess: true})
+                        }
+                    },
+                    (error) => {
+                        this.props.updateDisplayMessage({empty: false, error: true, content: error});
+                        this.setState({error: true})
                     }
-                },
-                (error) => {
-                    this.props.updateDisplayMessage({empty: false, error: true, content: error});
-                    this.setState({error: true})
-                }
-            )
+                )
+        }
     }
 
 
@@ -80,6 +120,11 @@ class Register extends Component {
         let pwdIcon = faEye;
         if (this.state.passwordType === "password") {
             pwdIcon = faEyeSlash;
+        }
+
+        let validateButton = <button disabled={true} className="btn btn-secondary">Validate</button>
+        if (this.state.passwordValid) {
+            validateButton = <button className="btn btn-primary">Validate</button>;
         }
 
         if (this.state.registrationSuccess) {
@@ -130,8 +175,20 @@ class Register extends Component {
                                 <FontAwesomeIcon icon={pwdIcon} className="col-2 my-auto" onClick={this.togglePasswordType} />
                             </div>
                         </div>
+                        <div className="my-3">
+                            <label className="d-block text-center" htmlFor="password_verify">Verify your password</label>
+                            <div className="row w-25 mx-auto">
+                                <input
+                                    id="password_verify"
+                                    className="d-block mx-auto col-10"
+                                    onChange={this.handlePwdVerifyChange}
+                                    type={this.state.passwordVerifyType}
+                                />
+                                <FontAwesomeIcon icon={pwdIcon} className="col-2 my-auto" onClick={this.togglePasswordVerifyType} />
+                            </div>
+                        </div>
                         <div className="text-center">
-                            <button className="btn btn-primary">Validate</button>
+                            {validateButton}
                         </div>
                     </form>
 

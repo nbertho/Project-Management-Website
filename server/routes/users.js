@@ -38,8 +38,8 @@ router.post('/login', async (req, res, next) => {
         let password = req.body.pwd;
         db.query('SELECT * from users WHERE email LIKE ?;', req.body.mail, (err, result, field) => {
             if (result.length !== 1) {
-                /** Query found more or less than 1 result found (more should not happened )**/
-                res.status(401).json({error: true, msg: `${result.length} result(s) found`, content: {}});
+                /** Query found more or less than 1 result found (more should not happened) **/
+                res.status(401).json({error: true, msg: `Wrong Credentials`, content: {}});
             } else {
                 dbPassword = result[0]["password"];
                 dbUsername = result[0]["name"];
