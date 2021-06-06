@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 
 import Task from "../../components/Task/Task";
+import NewTask from "../../components/Task/NewTask";
 
 class ProjectDetails extends Component {
 
@@ -65,6 +66,7 @@ class ProjectDetails extends Component {
                     {statusTable}
                 </div>
                 <br/>
+                <NewTask projectData={this.props.project} />
                 {taskInTable}
             </div>
         )

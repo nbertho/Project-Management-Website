@@ -63,9 +63,9 @@ router.put('/create', async (req, res, next) => {
         project_id: Joi.number().required(),
         project_token: Joi.string().required(),
         task_name: Joi.string().required(),
-        task_parent: Joi.number(),
         task_description: Joi.string(),
-        task_et: Joi.number()
+        task_et: Joi.number(),
+        task_priority: Joi.number(),
 
     });
     let joiResult = schema.validate(req.body);
@@ -86,7 +86,7 @@ router.put('/create', async (req, res, next) => {
                             token: token,
                             estimated_time: req.body.task_et,
                             project_id: req.body.project_id,
-                            parent_tasks_id: req.body.parent_tasks_id,
+                            priority: req.body.task_priority,
                             status_id: 1
                         },
                         (err, sqlResult, field) => {

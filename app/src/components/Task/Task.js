@@ -23,7 +23,7 @@ class Task extends Component {
             task_status_id: this.props.taskData.status_id,
             updatePending: false,
             dataHasChanged: false,
-            collapse: false
+            collapse: true
         }
 
         this.decrementTaskStatus = this.decrementTaskStatus.bind(this);
@@ -58,6 +58,10 @@ class Task extends Component {
     }
 
     updateTask() {
+
+        if (!this.state.updatePending) {
+            this.setState({collapse: false})
+        }
 
         if (this.state.dataHasChanged && this.state.updatePending) {
 
