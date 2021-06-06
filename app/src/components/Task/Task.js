@@ -9,17 +9,27 @@ class Task extends Component {
     constructor(props) {
         super(props);
 
-        let statusData = this.props.statusData.find(stat => stat.id === this.props.taskData.status_id)
+        let statusData = this.props.statusData.find(stat => stat.id === this.props.taskData.status_id);
+
+        let priority = this.props.taskData.priority;
+        if (priority === null) {
+            priority = 0;
+        }
+        let et = this.props.taskData.priority;
+        if (et === null) {
+            et = 0;
+        }
 
         this.state = {
             error: false,
+            active: true,
             statusData: statusData,
             task_id: this.props.taskData.id,
             task_token: this.props.taskData.token,
             task_name: this.props.taskData.name,
             task_description: this.props.taskData.description,
-            task_et: this.props.taskData.estimated_time,
-            task_priority: this.props.taskData.priority,
+            task_et: et,
+            task_priority: priority,
             task_status_id: this.props.taskData.status_id,
             updatePending: false,
             dataHasChanged: false,
@@ -29,6 +39,7 @@ class Task extends Component {
         this.decrementTaskStatus = this.decrementTaskStatus.bind(this);
         this.incrementTaskStatus = this.incrementTaskStatus.bind(this);
         this.updateTask = this.updateTask.bind(this);
+        this.removeTask = this.removeTask.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handlePriorityChange = this.handlePriorityChange.bind(this);
@@ -94,6 +105,38 @@ class Task extends Component {
         }
         else {
             this.setState({updatePending: !this.state.updatePending})
+        }
+
+    }
+
+    removeTask() {
+
+        let confirmMessage = `Are you sure you want to remove this task: ${this.state.task_name} ?`;
+
+        let confirm = window.confirm(confirmMessage);
+
+        if (confirm) {
+            const taskRequestBody = {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    task_id: this.state.task_id,
+                    task_token: this.state.task_token
+                })
+            };
+
+            fetch(process.env.REACT_APP_API_URL + "task/delete", taskRequestBody)
+                .then(response => response.json())
+                .then(
+                    (data) => {
+                        console.log(data);
+                        this.setState({active: false});
+                    },
+                    (error) => {
+                        console.log(error)
+                        this.setState({error: true})
+                    }
+                )
         }
 
     }
@@ -173,15 +216,20 @@ class Task extends Component {
 
     render() {
 
+        let rowClass = "row mb-2";
+        if (!this.state.active) {
+            rowClass = "d-none"
+        }
+
         let cssClass = `Task card col-2 offset-${this.state.task_status_id * 2 - 2}`;
-        let changeIcon = <FontAwesomeIcon className="mt-2" icon={faCog} onClick={this.updateTask} />;
+        let changeIcon = <FontAwesomeIcon className="mt-2 cursor-hover" icon={faCog} onClick={this.updateTask} />;
         let descriptionContent = <p className="card-text">{this.state.task_description}</p>
         let nameContent = <h5 className="py-2" style={{borderBottom: "3px solid " + this.state.statusData.color}}>{this.state.task_name}</h5>
         let etContent = <input className="w-100" id="task_et" name="task_et" value={this.state.task_et ?? undefined} type="number" onChange={this.handleEtChange} />
         let priorityContent = <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority ?? undefined} type="number" onChange={this.handlePriorityChange} />
 
         if (this.state.updatePending) {
-            changeIcon = <FontAwesomeIcon className="mt-2" color="green" icon={faCheck} onClick={this.updateTask} />;
+            changeIcon = <FontAwesomeIcon className="mt-2 cursor-hover" color="green" icon={faCheck} onClick={this.updateTask} />;
             descriptionContent = <input className="w-100 my-2" id="task_description" name="task_description" value={this.state.task_description} type="text" onChange={this.handleDescriptionChange} />
             nameContent = <input id="task_name" className="py-2" name="task_name" value={this.state.task_name} type="text" onChange={this.handleNameChange} />
         }
@@ -196,7 +244,7 @@ class Task extends Component {
         }
 
         return (
-            <div className="row mb-2">
+            <div className={rowClass}>
 
                 <article className={cssClass}>
 
@@ -205,7 +253,7 @@ class Task extends Component {
                             {collapseAction}
                         </button>
                         <div className="text-right">
-                            <FontAwesomeIcon className="mx-3 mt-2" icon={faTrash} />
+                            <FontAwesomeIcon className="mx-3 mt-2 cursor-hover" icon={faTrash} onClick={this.removeTask} />
                             {changeIcon}
                         </div>
                     </div>

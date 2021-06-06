@@ -16,6 +16,13 @@ class ProjectDetails extends Component {
             statusData: this.props.statusData,
             tasks: []
         }
+        this.updateTaskList = this.updateTaskList.bind(this);
+    }
+
+    updateTaskList(newTask) {
+        this.setState({
+            tasks: [...this.state.tasks, newTask]
+        })
     }
 
     componentDidMount() {
@@ -66,7 +73,7 @@ class ProjectDetails extends Component {
                     {statusTable}
                 </div>
                 <br/>
-                <NewTask projectData={this.props.project} />
+                <NewTask updateTaskList={this.updateTaskList} projectData={this.props.project} />
                 {taskInTable}
             </div>
         )

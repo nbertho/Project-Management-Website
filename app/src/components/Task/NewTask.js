@@ -2,7 +2,14 @@ import react, {Component} from "react";
 import React from "react";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowLeft, faArrowRight, faCheck, faChevronDown, faChevronUp} from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowLeft,
+    faArrowRight,
+    faCheck,
+    faChevronDown,
+    faChevronUp,
+    faUndo
+} from "@fortawesome/free-solid-svg-icons";
 
 class NewTask extends Component {
 
@@ -16,13 +23,14 @@ class NewTask extends Component {
             task_token: "",
             task_name: "",
             task_description: "",
-            task_et: null,
-            task_priority: null,
+            task_et: 0,
+            task_priority: 0,
             collapse: true
         }
 
         this.handleNameChange = this.handleNameChange.bind(this);
         this.createTask = this.createTask.bind(this);
+        this.resetState = this.resetState.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handlePriorityChange = this.handlePriorityChange.bind(this);
         this.handleEtChange = this.handleEtChange.bind(this);
@@ -34,17 +42,19 @@ class NewTask extends Component {
         this.setState({collapse: !this.state.collapse})
     }
 
+    resetState() {
+        this.setState({
+            task_id: "",
+            task_token: "",
+            task_name: "",
+            task_description: "",
+            task_et: 0,
+            task_priority: 0,
+            collapse: true
+        });
+    }
+
     createTask() {
-
-        let taskEt = this.state.task_et
-        if (taskEt === null) {
-            taskEt = 0;
-        }
-
-        let taskPriority = this.state.task_priority
-        if (taskPriority === null) {
-            taskPriority = 0;
-        }
 
         const taskRequestBody = {
             method: 'PUT',
@@ -53,25 +63,30 @@ class NewTask extends Component {
                 project_id: this.props.projectData.project_id,
                 project_token: this.props.projectData.token,
                 task_name: this.state.task_name,
-                task_priority: taskPriority,
+                task_priority: this.state.task_priority,
                 task_description: this.state.task_description,
-                task_et: taskEt
+                task_et: this.state.task_et
             })
         };
         fetch(process.env.REACT_APP_API_URL + "task/create", taskRequestBody)
             .then(response => response.json())
             .then(
                 (data) => {
-                    console.log(data);
-                    this.setState({
-                        task_id: "",
-                        task_token: "",
-                        task_name: "",
-                        task_description: "",
-                        task_et: null,
-                        task_priority: null,
-                        collapse: true
-                    });
+                    if (!data.error) {
+                        this.props.updateTaskList({
+                            id: data.content.task_id,
+                            name: this.state.task_name,
+                            description: this.state.task_description,
+                            estimated_time: this.state.task_et,
+                            priority: this.state.task_priority,
+                            status_id: 1,
+                            token: data.content.task_token
+                        });
+                        this.resetState();
+                    }
+                    else {
+                        alert(data.msg)
+                    }
                 },
                 (error) => {
                     console.log(error)
@@ -102,7 +117,14 @@ class NewTask extends Component {
     render() {
 
         let cssClass = `Task card col-2 offset-0`;
-        let collapseData = <button onClick={this.createTask} className="btn btn-success"><FontAwesomeIcon icon={faCheck} /></button>
+        let collapseData =  <div>
+                                <button onClick={this.resetState} className="btn btn-danger mx-1">
+                                    <FontAwesomeIcon icon={faUndo} />
+                                </button>
+                                <button onClick={this.createTask} className="btn btn-success mx-1">
+                                    <FontAwesomeIcon icon={faCheck} />
+                                </button>
+                            </div>
 
         // Collapse Action
         let collapseAction = <FontAwesomeIcon icon={faChevronDown} />
@@ -110,7 +132,7 @@ class NewTask extends Component {
 
         if (this.state.collapse) {
             collapseAction = <FontAwesomeIcon icon={faChevronUp} />
-            collapseData = <h5 className="my-auto">+ New Task</h5>;
+            collapseData = <h5 className="my-auto cursor-hover" onClick={this.toggleCollapse}>+ New Task</h5>;
             cssContent = "d-none";
         }
 
@@ -137,11 +159,11 @@ class NewTask extends Component {
                         <div className="TaskInfo my-4 row">
                             <div className="col-6">
                                 <p>Estimated-time</p>
-                                <input className="w-100" id="task_et" name="task_et" value={this.state.task_et ?? undefined} type="number" onChange={this.handleEtChange} />
+                                <input className="w-100" id="task_et" name="task_et" value={this.state.task_et} type="number" onChange={this.handleEtChange} />
                             </div>
                             <div className="col-6">
                                 <p>Priority</p>
-                                <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority ?? undefined} type="number" onChange={this.handlePriorityChange} />
+                                <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority} type="number" onChange={this.handlePriorityChange} />
                             </div>
                         </div>
 
