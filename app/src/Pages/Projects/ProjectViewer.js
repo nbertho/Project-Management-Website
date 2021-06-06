@@ -12,10 +12,15 @@ class ProjectViewer extends Component {
             projectsData: this.props.projectsData,
             statusData: [],
             userData: this.props.userData,
+            orderFilter: {
+                value: 'name',
+                order: 'asc'
+            },
             showProject: false
         }
 
         this.updateShowProject = this.updateShowProject.bind(this);
+        this.updateFilter = this.updateFilter.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +52,10 @@ class ProjectViewer extends Component {
         this.setState({showProject: projectId});
     }
 
+    updateFilter(newState) {
+        this.setState({orderFilter: newState})
+    }
+
     render() {
 
         let cssClass = "ProjectViewer pb-4";
@@ -60,14 +69,13 @@ class ProjectViewer extends Component {
         else {
             let project = this.props.projectsData.find( project => project.project_id === this.state.showProject )
             projectTitle = project.name;
-            projectView = <ProjectDetails project={project} userData={this.props.userData} statusData={this.state.statusData} />;
+            projectView = <ProjectDetails filter={this.state.orderFilter} project={project} userData={this.props.userData} statusData={this.state.statusData} />;
             cssClass += ` mx-4 ${this.props.cssClass}`;
         }
 
         return (
             <div className={cssClass}>
-
-                <Menu projectTitle={projectTitle} showProject={this.state.showProject} updateShowProject={this.updateShowProject} />
+                <Menu projectTitle={projectTitle} showProject={this.state.showProject} updateShowProject={this.updateShowProject} updateFilter={this.updateFilter} />
                 <br/>
                 {projectView}
                 <br/>

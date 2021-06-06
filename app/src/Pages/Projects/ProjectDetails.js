@@ -17,12 +17,33 @@ class ProjectDetails extends Component {
             tasks: []
         }
         this.updateTaskList = this.updateTaskList.bind(this);
+        this.sortArrayByName = this.sortArrayByName.bind(this);
+        this.sortArrayByPriority = this.sortArrayByPriority.bind(this);
     }
 
     updateTaskList(newTask) {
         this.setState({
             tasks: [...this.state.tasks, newTask]
         })
+    }
+
+    sortArrayByName(a, b) {
+        if ( a.name < b.name ) {
+            return -1;
+        }
+        if ( a.name > b.name ) {
+            return 1;
+        }
+    }
+
+    sortArrayByPriority(a, b) {
+        if ( a.priority < b.priority ) {
+            return -1;
+        }
+        if ( a.priority > b.priority ) {
+            return 1;
+        }
+        return 0;
     }
 
     componentDidMount() {
@@ -63,7 +84,15 @@ class ProjectDetails extends Component {
             )
         });
 
-        let taskInTable = this.state.tasks.map((task) => {
+        let tasksList = this.state.tasks;
+        if (this.props.filter.value === 'name') {
+            tasksList.sort(this.sortArrayByName);
+        }
+        if (this.props.filter.value === 'priority') {
+            tasksList.sort(this.sortArrayByPriority);
+        }
+
+        let taskInTable = tasksList.map((task) => {
             return <Task key={task.id} taskData={task} statusData={this.state.statusData} />
         })
 
