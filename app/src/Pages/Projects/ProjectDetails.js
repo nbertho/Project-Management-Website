@@ -53,7 +53,7 @@ class ProjectDetails extends Component {
                     </h5>
                 </div>
             )
-        })
+        });
 
         let taskInTable = this.state.tasks.map((task) => {
             return <Task key={task.id} taskData={task} statusData={this.state.statusData} />

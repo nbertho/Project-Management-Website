@@ -51,8 +51,7 @@ router.put('/create', async (req, res, next) => {
                         (err, sqlResult, field) => {
                             if (err) {
                                 res.status(401).json({error: true, msg: err, content: {}});
-                            }
-                            else {
+                            } else {
                                 let {insertId} = sqlResult;
 
                                 db.query(
@@ -64,8 +63,7 @@ router.put('/create', async (req, res, next) => {
                                     (err, sqlResult, field) => {
                                         if (err) {
                                             res.status(401).json({error: true, msg: err, content: {}});
-                                        }
-                                        else {
+                                        } else {
                                             res.status(201).json({
                                                 error: false,
                                                 msg: "Project created",
@@ -79,8 +77,7 @@ router.put('/create', async (req, res, next) => {
                     )
 
                 });
-            }
-            else {
+            } else {
                 res.status(401).json({error: true, msg: "Wrong User Credentials", content: {result}});
             }
         })
@@ -143,7 +140,7 @@ router.patch('/update', async (req, res, next) => {
 
 
 /**
- * Tasks create route
+ * Project delete route
  * DELETE => api/project/delete
  *
  *    Require valid project_id, project_token,
@@ -169,7 +166,11 @@ router.delete('/delete', async (req, res, next) => {
                     console.log(err)
                     res.status(401).json({error: true, msg: err, content: {}});
                 } else if (deleteResult.affectedRows === 0) {
-                    res.status(401).json({error: true, msg: "Project not found", content: {"project_id": req.body.project_id}});
+                    res.status(401).json({
+                        error: true,
+                        msg: "Project not found",
+                        content: {"project_id": req.body.project_id}
+                    });
                 } else {
                     res.status(200).json({
                         error: false,
@@ -181,5 +182,44 @@ router.delete('/delete', async (req, res, next) => {
         )
     }
 });
+
+
+/**
+ * Project list route
+ * POST => api/project/list
+ *
+ *    Require valid user_id, user_mail, user_token
+ */
+router.post('/list', async (req, res, next) => {
+
+    // Validate request body
+    const schema = Joi.object({
+        user_id: Joi.number().required(),
+        user_mail: Joi.string().required(),
+        user_token: Joi.string().required()
+    });
+    let joiResult = schema.validate(req.body);
+
+    if (joiResult.error) {
+        /** Joi can't validate data **/
+        res.status(401).json({error: true, msg: joiResult.error.message, content: {}});
+    } else {
+        db.query(
+            'SELECT project.id AS project_id, project.name, project.active, project.description, project.status_id, project.token FROM users_has_project JOIN project ON users_has_project.project_id = project.id JOIN users ON users_has_project.users_id = users.id WHERE (users.id = ? && users.email = ? && users.token = ? && project.active = 1)',
+            [req.body.user_id, req.body.user_mail, req.body.user_token],
+            (err, result, field) => {
+                if (err) {
+                    /** Query found more or less than 1 result found (more should not happened )**/
+                    res.status(401).json({error: true, msg: err, content: {}});
+                } else {
+                    res.status(200).json({error: false, msg: `${result.length} result(s) found`, content: {result}});
+
+                }
+            })
+
+    }
+
+})
+
 
 module.exports = router;

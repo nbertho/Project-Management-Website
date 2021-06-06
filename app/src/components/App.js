@@ -1,5 +1,6 @@
 import react, {Component} from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import Cookies from 'js-cookie';
 import '../styles/bootstrap.min.css';
 import '../styles/app.css';
 
@@ -17,22 +18,87 @@ class App extends Component {
         super(props);
         this.state = {
             isLogged: false,
+            projectsDataHasBennFetch: false,
             userData: {},
             projectsData: []
         }
 
         this.updateAfterLogin = this.updateAfterLogin.bind(this);
+        this.resetState = this.resetState.bind(this);
     }
 
     updateAfterLogin(userData, projectsData, isLogged) {
 
+        if (projectsData === 0) {
+            this.setState({
+                userData: userData,
+                projectsData: projectsData,
+                isLogged: isLogged
+            });
+        }
+        else {
+            this.setState({
+                userData: userData,
+                projectsData: projectsData,
+                isLogged: isLogged
+            })
+        }
+        Cookies.set("application_user_data", userData);
+    }
+
+    resetState() {
         this.setState({
-            userData: userData,
-            projectsData: projectsData,
-            isLogged: isLogged
-        })
+            isLogged: false,
+            projectsDataHasBennFetch: false,
+            userData: {},
+            projectsData: []
+        });
+    }
+
+    fetchProjectList() {
+        const helperRequestBody = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user_id: this.state.userData.id,
+                user_mail: this.state.userData.mail,
+                user_token: this.state.userData.token
+            })
+        };
+
+        fetch(process.env.REACT_APP_API_URL + "project/list", helperRequestBody)
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    this.setState({projectsData: data.content.result, projectsDataHasBennFetch: true});
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({error: true})
+                }
+            )
+    }
+
+    componentDidMount() {
+
+        if (this.state.isLogged === false) {
+            let userCookieData = Cookies.get("application_user_data");
+            if (userCookieData !== undefined) {
+
+                this.setState(
+                    {userData: JSON.parse(userCookieData), isLogged: true},
+                    () => {
+                        this.fetchProjectList();
+                    }
+                );
+            }
+        }
+        else {
+            this.fetchProjectList();
+        }
 
     }
+
 
     render() {
 
@@ -42,7 +108,7 @@ class App extends Component {
             <Router>
                 <Switch>
                     <Route path="/login">
-                        <Redirect to="/" />;
+                        <Redirect to="/"/>;
                     </Route>
                     <Route exact path="/">
                         <ProjectViewer
@@ -50,6 +116,9 @@ class App extends Component {
                             isLogged={this.state.isLogged}
                             userData={this.state.userData}
                             projectsData={this.state.projectsData}
+                            reRenderAppComponent={this.reRenderAppComponent}
+                            userDataFromCookies={this.state.userDataFromCookies}
+                            resetUserDataFromCookies={this.resetUserDataFromCookies}
                         />;
                     </Route>
                 </Switch>
@@ -87,6 +156,7 @@ class App extends Component {
                 <Header
                     isLogged={this.state.isLogged}
                     username={this.state.userData.username}
+                    resetState={this.resetState}
                 />
                 <div className={mainContainerCss}>
                     {appContent}

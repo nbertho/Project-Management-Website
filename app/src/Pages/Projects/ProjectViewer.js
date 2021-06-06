@@ -37,6 +37,12 @@ class ProjectViewer extends Component {
             )
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.projectsData !== this.props.projectsData){
+            this.setState({projectsData: this.props.projectsData})
+        }
+    }
+
     updateShowProject(projectId) {
         this.setState({showProject: projectId});
     }
@@ -48,7 +54,7 @@ class ProjectViewer extends Component {
         let projectTitle = "";
 
         if (!this.state.showProject) {
-            projectView = <ProjectList userData={this.state.userData} projectsData={this.state.projectsData} updateShowProject={this.updateShowProject} />;
+            projectView = <ProjectList userData={this.state.userData} projectsData={this.props.projectsData} updateShowProject={this.updateShowProject} />;
             cssClass += ` container ${this.props.cssClass}`;
         }
         else {
@@ -70,6 +76,6 @@ class ProjectViewer extends Component {
 
     }
 
-};
+}
 
 export default ProjectViewer;

@@ -19,6 +19,12 @@ class ProjectList extends Component {
         this.setState({projectsData: newProjectData})
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.projectsData !== this.props.projectsData){
+            this.setState({projectsData: this.props.projectsData})
+        }
+    }
+
     render() {
 
         let cssClass = `ProjectList ${this.props.cssClass}`;
