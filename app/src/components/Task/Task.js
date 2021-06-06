@@ -15,7 +15,7 @@ class Task extends Component {
         if (priority === null) {
             priority = 0;
         }
-        let et = this.props.taskData.priority;
+        let et = this.props.taskData.estimated_time;
         if (et === null) {
             et = 0;
         }
