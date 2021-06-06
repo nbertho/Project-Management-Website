@@ -167,16 +167,6 @@ class NewTask extends Component {
                                 <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority} type="number" onChange={this.handlePriorityChange} />
                             </div>
                         </div>
-
-                        <div className="d-flex my-2 justify-content-around">
-                            <button className="btn btn-light" onClick={this.decrementTaskStatus}>
-                                <FontAwesomeIcon icon={faArrowLeft} />
-                            </button>
-                            <div>&nbsp;</div>
-                            <button className="btn btn-light" onClick={this.incrementTaskStatus}>
-                                <FontAwesomeIcon icon={faArrowRight} />
-                            </button>
-                        </div>
                     </div>
 
                 </article>

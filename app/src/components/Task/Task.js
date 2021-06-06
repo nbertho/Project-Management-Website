@@ -221,17 +221,22 @@ class Task extends Component {
             rowClass = "d-none"
         }
 
+        let disabled = false;
+
         let cssClass = `Task card col-2 offset-${this.state.task_status_id * 2 - 2}`;
         let changeIcon = <FontAwesomeIcon className="mt-2 cursor-hover" icon={faCog} onClick={this.updateTask} />;
         let descriptionContent = <p className="card-text">{this.state.task_description}</p>
         let nameContent = <h5 className="py-2" style={{borderBottom: "3px solid " + this.state.statusData.color}}>{this.state.task_name}</h5>
-        let etContent = <input className="w-100" id="task_et" name="task_et" value={this.state.task_et ?? undefined} type="number" onChange={this.handleEtChange} />
-        let priorityContent = <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority ?? undefined} type="number" onChange={this.handlePriorityChange} />
+        let etContent = <input disabled={true} className="w-100" id="task_et" name="task_et" value={this.state.task_et ?? undefined} type="number" onChange={this.handleEtChange} />
+        let priorityContent = <input disabled={true} className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority ?? undefined} type="number" onChange={this.handlePriorityChange} />
 
         if (this.state.updatePending) {
+            disabled = true;
             changeIcon = <FontAwesomeIcon className="mt-2 cursor-hover" color="green" icon={faCheck} onClick={this.updateTask} />;
             descriptionContent = <input className="w-100 my-2" id="task_description" name="task_description" value={this.state.task_description} type="text" onChange={this.handleDescriptionChange} />
             nameContent = <input id="task_name" className="py-2" name="task_name" value={this.state.task_name} type="text" onChange={this.handleNameChange} />
+            etContent = <input className="w-100" id="task_et" name="task_et" value={this.state.task_et ?? undefined} type="number" onChange={this.handleEtChange} />
+            priorityContent = <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority ?? undefined} type="number" onChange={this.handlePriorityChange} />
         }
 
         // Collapse Action
@@ -277,11 +282,11 @@ class Task extends Component {
                         </div>
 
                         <div className="d-flex my-2 justify-content-around">
-                            <button className="btn btn-light" onClick={this.decrementTaskStatus}>
+                            <button className="btn btn-light" disabled={disabled} onClick={this.decrementTaskStatus}>
                                 <FontAwesomeIcon icon={faArrowLeft} />
                             </button>
                             <div>&nbsp;</div>
-                            <button className="btn btn-light" onClick={this.incrementTaskStatus}>
+                            <button className="btn btn-light" disabled={disabled} onClick={this.incrementTaskStatus}>
                                 <FontAwesomeIcon icon={faArrowRight} />
                             </button>
                         </div>

@@ -32,8 +32,8 @@ class Login extends Component {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                mail: "final_test@gmail.com",//this.state.loginMail,
-                pwd: "azerty"//this.state.loginPwd
+                mail: this.state.loginMail,
+                pwd: this.state.loginPwd
             })
         };
 

@@ -109,7 +109,7 @@ class Register extends Component {
                             />
                         </div>
                         <div className="my-3">
-                            <label className="d-block text-center"htmlFor="name">Email</label>
+                            <label className="d-block text-center"htmlFor="name">Name</label>
                             <input
                                 id="name"
                                 className="d-block mx-auto w-25"
