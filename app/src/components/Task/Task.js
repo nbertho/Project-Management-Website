@@ -93,10 +93,10 @@ class Task extends Component {
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        console.log(data);
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                     },
                     (error) => {
-                        console.log(error)
+                        this.props.updateDisplayMessage({empty: false, error: true, content: error});
                         this.setState({error: true})
                     }
                 )
@@ -129,11 +129,11 @@ class Task extends Component {
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        console.log(data);
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                         this.setState({active: false});
                     },
                     (error) => {
-                        console.log(error)
+                        this.props.updateDisplayMessage({empty: false, error: true, content: error});
                         this.setState({error: true})
                     }
                 )
@@ -166,11 +166,11 @@ class Task extends Component {
                 .then(response => response.json())
                 .then(
                     (data) => {
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                         this.setState({statusData: this.props.statusData.find(stat => stat.id === newStatusId) })
-                        console.log(data);
                     },
                     (error) => {
-                        console.log(error)
+                        this.props.updateDisplayMessage({empty: false, error: true, content: error});
                         this.setState({error: true})
                     }
                 )
@@ -203,11 +203,11 @@ class Task extends Component {
                 .then(response => response.json())
                 .then(
                     (data) => {
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                         this.setState({statusData: this.props.statusData.find(stat => stat.id === newStatusId)})
-                        //console.log(data);
                     },
                     (error) => {
-                        console.log(error)
+                        this.props.updateDisplayMessage({empty: false, error: true, content: error});
                         this.setState({error: true})
                     }
                 )

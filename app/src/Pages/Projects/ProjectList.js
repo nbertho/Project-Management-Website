@@ -30,10 +30,10 @@ class ProjectList extends Component {
         let cssClass = `ProjectList ${this.props.cssClass}`;
 
         let projectList = this.state.projectsData.map((project) => {
-            return <SingleProject key={project.project_id} project={project} updateShowProject={this.props.updateShowProject} removeProject={this.removeProject} />
+            return <SingleProject key={project.project_id} project={project} updateShowProject={this.props.updateShowProject} removeProject={this.removeProject} updateDisplayMessage={this.props.updateDisplayMessage} />
         })
 
-        let newProject = <NewProject userData={this.props.userData} addProject={this.addProject} />
+        let newProject = <NewProject userData={this.props.userData} addProject={this.addProject} updateDisplayMessage={this.props.updateDisplayMessage} />
 
         return (
             <div className={cssClass}>

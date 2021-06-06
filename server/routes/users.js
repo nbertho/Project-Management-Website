@@ -113,30 +113,34 @@ router.post('/register', async (req, res) => {
                             /** Bcrypt error **/
                             res.status(200).json({error: true, msg: err, content: {}});
                         } else {
-                            db.query('INSERT INTO users SET ?', {
-                                email: req.body.mail,
-                                password: hash,
-                                name: req.body.name
-                            }, (err, insertResult, field) => {
-                                if (err) {
-                                    /** SQL Query error **/
-                                    res.status(401).json({error: true, msg: err, content: {}});
-                                } else {
-                                    let {insertId} = insertResult;
-                                    /** User successfully added to the DB **/
-                                    res.status(200).json({
-                                        error: false,
-                                        msg: "User created successfully",
-                                        content: {
-                                            userData: {
-                                                id: insertId,
-                                                username: req.body.name,
-                                                mail: req.body.mail
-                                            },
-                                        }
-                                    });
-                                }
-                            })
+                            require('crypto').randomBytes(48, function (err, buffer) {
+                                let genToken = buffer.toString('hex');
+                                db.query('INSERT INTO users SET ?', {
+                                    email: req.body.mail,
+                                    password: hash,
+                                    token: genToken,
+                                    name: req.body.name
+                                }, (err, insertResult, field) => {
+                                    if (err) {
+                                        /** SQL Query error **/
+                                        res.status(401).json({error: true, msg: err, content: {}});
+                                    } else {
+                                        let {insertId} = insertResult;
+                                        /** User successfully added to the DB **/
+                                        res.status(200).json({
+                                            error: false,
+                                            msg: "User created successfully",
+                                            content: {
+                                                userData: {
+                                                    id: insertId,
+                                                    username: req.body.name,
+                                                    mail: req.body.mail
+                                                },
+                                            }
+                                        });
+                                    }
+                                })
+                            });
                         }
                     });
                 } else {

@@ -10,7 +10,7 @@ class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loggedInCookie: false
+            loggedInCookie: false,
         }
 
         this.logOut = this.logOut.bind(this);
@@ -23,6 +23,7 @@ class Header extends Component {
             this.setState({loggedInCookie: false})
             this.props.resetState();
         }
+        this.props.updateDisplayMessage(null);
     }
 
     componentDidMount() {
@@ -32,9 +33,25 @@ class Header extends Component {
         }
     }
 
+    componentDidUpdate() {
+        if (this.props.message.content !== "") {
+            setTimeout(() => this.props.updateDisplayMessage(null), 3000);
+        }
+    }
+
     render() {
 
         let logOutContent = "";
+        let message = "";
+        let messageBoxStyle = "d-none";
+        if (!this.props.message.empty) {
+            messageBoxStyle = "border bg-white border-info"
+            let messageClass = 'text-success text-center my-1 font-weight-bold';
+            if (this.props.message.error) {
+                messageClass = 'text-danger text-center my-1 font-weight-bold';
+            }
+            message = <p className={messageClass}>{this.props.message.content}</p>
+        }
 
         if (this.state.loggedInCookie || this.props.isLogged) {
             logOutContent = <p className="cursor-hover" onClick={this.logOut}><FontAwesomeIcon icon={faSignOutAlt} /> Log out</p>
@@ -45,12 +62,15 @@ class Header extends Component {
                 <div className="mt-0 container text-left p-4 mt-0">
                     <div className="row">
                         <Title
-                            cssClass="col-6"
+                            cssClass="col-8"
                             isLoggedIn={this.props.isLogged}
                             username={this.props.username}
                         />
-                        <div className="col-5 text-right">
+                        <div className="col-4 text-right">
                             {logOutContent}
+                            <div id="message-box" className={messageBoxStyle}>
+                                {message}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -97,7 +97,7 @@ class ProjectDetails extends Component {
         }
 
         let taskInTable = tasksList.map((task) => {
-            return <Task key={task.id} taskData={task} statusData={this.state.statusData} />
+            return <Task key={task.id} taskData={task} statusData={this.state.statusData} updateDisplayMessage={this.props.updateDisplayMessage} />
         })
 
         return (
@@ -106,7 +106,7 @@ class ProjectDetails extends Component {
                     {statusTable}
                 </div>
                 <br/>
-                <NewTask updateTaskList={this.updateTaskList} projectData={this.props.project} />
+                <NewTask updateTaskList={this.updateTaskList} projectData={this.props.project} updateDisplayMessage={this.props.updateDisplayMessage} />
                 {taskInTable}
             </div>
         )

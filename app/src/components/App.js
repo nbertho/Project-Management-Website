@@ -17,6 +17,11 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            displayMessage: {
+                empty: true,
+                error: false,
+                content: ""
+            },
             isLogged: false,
             projectsDataHasBennFetch: false,
             userData: {},
@@ -24,7 +29,23 @@ class App extends Component {
         }
 
         this.updateAfterLogin = this.updateAfterLogin.bind(this);
+        this.updateDisplayMessage = this.updateDisplayMessage.bind(this);
         this.resetState = this.resetState.bind(this);
+    }
+
+    updateDisplayMessage(newMessage) {
+        if (newMessage === null) {
+            this.setState({
+                displayMessage: {
+                    empty: true,
+                    error: false,
+                    content: ""
+                }
+            })
+        }
+        else {
+            this.setState({displayMessage: newMessage })
+        }
     }
 
     updateAfterLogin(userData, projectsData, isLogged) {
@@ -48,6 +69,11 @@ class App extends Component {
 
     resetState() {
         this.setState({
+            displayMessage: {
+                empty: true,
+                error: false,
+                content: ""
+            },
             isLogged: false,
             projectsDataHasBennFetch: false,
             userData: {},
@@ -99,7 +125,6 @@ class App extends Component {
 
     }
 
-
     render() {
 
         let mainContainerCss = ""
@@ -119,6 +144,7 @@ class App extends Component {
                             reRenderAppComponent={this.reRenderAppComponent}
                             userDataFromCookies={this.state.userDataFromCookies}
                             resetUserDataFromCookies={this.resetUserDataFromCookies}
+                            updateDisplayMessage={this.updateDisplayMessage}
                         />;
                     </Route>
                 </Switch>
@@ -138,11 +164,13 @@ class App extends Component {
                         <Route path="/login">
                             <Login
                                 cssClass="mt-4"
+                                updateDisplayMessage={this.updateDisplayMessage}
                                 updateAfterLogin={this.updateAfterLogin}
                             />
                         </Route>
                         <Route path="/register">
                             <Register
+                                updateDisplayMessage={this.updateDisplayMessage}
                                 cssClass="mt-4"
                             />
                         </Route>
@@ -157,6 +185,8 @@ class App extends Component {
                     isLogged={this.state.isLogged}
                     username={this.state.userData.username}
                     resetState={this.resetState}
+                    message={this.state.displayMessage}
+                    updateDisplayMessage={this.updateDisplayMessage}
                 />
                 <div className={mainContainerCss}>
                     {appContent}

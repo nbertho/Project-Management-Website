@@ -42,7 +42,7 @@ class NewProject extends Component {
             .then(response => response.json())
             .then(
                 (data) => {
-                    console.log(data);
+                    this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                     let newProject = {
                         description: this.state.project_description,
                         name: this.state.project_name,
@@ -54,7 +54,7 @@ class NewProject extends Component {
                     this.props.addProject(newProject)
                 },
                 (error) => {
-                    console.log(error)
+                    this.props.updateDisplayMessage({empty: false, error: true, content: error});
                     this.setState({error: true})
                 }
             )

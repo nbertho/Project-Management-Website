@@ -72,6 +72,7 @@ class NewTask extends Component {
             .then(response => response.json())
             .then(
                 (data) => {
+                    this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                     if (!data.error) {
                         this.props.updateTaskList({
                             id: data.content.task_id,
@@ -89,7 +90,7 @@ class NewTask extends Component {
                     }
                 },
                 (error) => {
-                    console.log(error)
+                    this.props.updateDisplayMessage({empty: false, error: true, content: error});
                     this.setState({error: true})
                 }
             )

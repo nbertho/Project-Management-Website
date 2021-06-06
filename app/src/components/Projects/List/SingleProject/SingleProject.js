@@ -50,13 +50,13 @@ class SingleProject extends Component {
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        console.log(data);
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                         if (!data.error) {
                             this.setState({updatePending: !this.state.updatePending, isShown: false});
                         }
                     },
                     (error) => {
-                        console.log(error)
+                        this.props.updateDisplayMessage({empty: false, error: true, content: error});
                         this.setState({error: true})
                     }
                 )
@@ -95,11 +95,11 @@ class SingleProject extends Component {
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        console.log(data);
+                        this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                         this.setState({updatePending: !this.state.updatePending});
                     },
                     (error) => {
-                        console.log(error)
+                        this.props.updateDisplayMessage({empty: false, error: true, content: error});
                         this.setState({error: true})
                     }
                 )

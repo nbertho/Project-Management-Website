@@ -36,7 +36,6 @@ class ProjectViewer extends Component {
                     this.setState({statusData: data.content.status})
                 },
                 (error) => {
-                    console.log(error)
                     this.setState({error: true})
                 }
             )
@@ -63,13 +62,13 @@ class ProjectViewer extends Component {
         let projectTitle = "";
 
         if (!this.state.showProject) {
-            projectView = <ProjectList userData={this.state.userData} projectsData={this.props.projectsData} updateShowProject={this.updateShowProject} />;
+            projectView = <ProjectList userData={this.state.userData} projectsData={this.props.projectsData} updateShowProject={this.updateShowProject} updateDisplayMessage={this.props.updateDisplayMessage} />;
             cssClass += ` container ${this.props.cssClass}`;
         }
         else {
             let project = this.props.projectsData.find( project => project.project_id === this.state.showProject )
             projectTitle = project.name;
-            projectView = <ProjectDetails filter={this.state.orderFilter} project={project} userData={this.props.userData} statusData={this.state.statusData} />;
+            projectView = <ProjectDetails filter={this.state.orderFilter} project={project} userData={this.props.userData} statusData={this.state.statusData} updateDisplayMessage={this.props.updateDisplayMessage} />;
             cssClass += ` mx-4 ${this.props.cssClass}`;
         }
 
