@@ -33,9 +33,14 @@ class Header extends Component {
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState,snapshot) {
         if (this.props.message.content !== "") {
-            setTimeout(() => this.props.updateDisplayMessage(null), 3000);
+            let messageBox = document.getElementById("message-box");
+            messageBox.classList.add("fadeout-animation");
+            setTimeout(() => {
+                this.props.updateDisplayMessage(null);
+                messageBox.classList.remove('fadeout-animation');
+            }, 5000);
         }
     }
 

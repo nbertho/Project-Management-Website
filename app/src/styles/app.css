@@ -2,3 +2,21 @@
 .cursor-hover {
     cursor: pointer
 }
+
+@keyframes fade-out-animation{
+    0%{
+        opacity: 1;
+    }
+    75%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
+.fadeout-animation {
+    animation-name: fade-out-animation;
+    animation-duration: 4000ms;
+    animation-fill-mode: forwards;
+}
