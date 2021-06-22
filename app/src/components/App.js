@@ -14,6 +14,9 @@ import ProjectViewer from "../Pages/Projects/ProjectViewer"
 
 class App extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -33,6 +36,10 @@ class App extends Component {
         this.resetState = this.resetState.bind(this);
     }
 
+    /**
+     * Update the message to display or reset it if null
+     * @param newMessage
+     */
     updateDisplayMessage(newMessage) {
         if (newMessage === null) {
             this.setState({
@@ -42,12 +49,17 @@ class App extends Component {
                     content: ""
                 }
             })
-        }
-        else {
-            this.setState({displayMessage: newMessage })
+        } else {
+            this.setState({displayMessage: newMessage})
         }
     }
 
+    /**
+     * Update user property after login and sets the cookie
+     * @param userData
+     * @param projectsData
+     * @param isLogged
+     */
     updateAfterLogin(userData, projectsData, isLogged) {
 
         if (projectsData === 0) {
@@ -56,8 +68,7 @@ class App extends Component {
                 projectsData: projectsData,
                 isLogged: isLogged
             });
-        }
-        else {
+        } else {
             this.setState({
                 userData: userData,
                 projectsData: projectsData,
@@ -67,6 +78,9 @@ class App extends Component {
         Cookies.set("application_user_data", userData);
     }
 
+    /**
+     * Reset the App state
+     */
     resetState() {
         this.setState({
             displayMessage: {
@@ -81,6 +95,9 @@ class App extends Component {
         });
     }
 
+    /**
+     * Fetch the API to get the user's project
+     */
     fetchProjectList() {
         const helperRequestBody = {
             method: 'POST',
@@ -105,6 +122,9 @@ class App extends Component {
             )
     }
 
+    /**
+     * Update the user data from cookies if needed
+     */
     componentDidMount() {
 
         if (this.state.isLogged === false) {
@@ -118,13 +138,15 @@ class App extends Component {
                     }
                 );
             }
-        }
-        else {
+        } else {
             this.fetchProjectList();
         }
 
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let mainContainerCss = ""

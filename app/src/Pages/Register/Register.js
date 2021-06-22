@@ -5,6 +5,9 @@ import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 
 class Register extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -29,24 +32,31 @@ class Register extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Toggle the password type between password and text
+     */
     togglePasswordType() {
         if (this.state.passwordType === "password") {
             this.setState({passwordType: "text"})
-        }
-        else {
+        } else {
             this.setState({passwordType: "password"})
         }
     }
 
+    /**
+     * Toggle the second password type between password and text
+     */
     togglePasswordVerifyType() {
         if (this.state.passwordVerifyType === "password") {
             this.setState({passwordVerifyType: "text"})
-        }
-        else {
+        } else {
             this.setState({passwordVerifyType: "password"})
         }
     }
 
+    /**
+     * Verify that both password matches
+     */
     checkPwd() {
 
         if (this.state.userPwd === this.state.userPwdVerify) {
@@ -55,14 +65,26 @@ class Register extends Component {
 
     }
 
+    /**
+     * Handle mail input changes
+     * @param event
+     */
     handleMailChange(event) {
         this.setState({userEmail: event.target.value});
     }
 
+    /**
+     * Handle name input changes
+     * @param event
+     */
     handleNameChange(event) {
         this.setState({userName: event.target.value});
     }
 
+    /**
+     * Handle password input changes
+     * @param event
+     */
     handlePwdChange(event) {
         this.setState(
             {userPwd: event.target.value},
@@ -72,6 +94,10 @@ class Register extends Component {
         );
     }
 
+    /**
+     * Handle password verify input changes
+     * @param event
+     */
     handlePwdVerifyChange(event) {
         this.setState(
             {userPwdVerify: event.target.value},
@@ -81,6 +107,10 @@ class Register extends Component {
         );
     }
 
+    /**
+     * Fetch the API to register the user
+     * @param event
+     */
     handleSubmit(event) {
         event.preventDefault();
 
@@ -112,8 +142,10 @@ class Register extends Component {
         }
     }
 
-
-    render () {
+    /**
+     * @returns {JSX.Element}
+     */
+    render() {
 
         let cssClass = `Register ${this.props.cssClass}`;
 
@@ -129,10 +161,9 @@ class Register extends Component {
 
         if (this.state.registrationSuccess) {
             return (
-                <Redirect to="/" />
+                <Redirect to="/"/>
             )
-        }
-        else {
+        } else {
             return (
                 <div className={cssClass}>
 
@@ -144,7 +175,7 @@ class Register extends Component {
 
                     <form className="my-3 mx-auto" onSubmit={this.handleSubmit}>
                         <div className="my-3">
-                            <label className="d-block text-center"htmlFor="email">Email</label>
+                            <label className="d-block text-center" htmlFor="email">Email</label>
                             <input
                                 id="email"
                                 className="d-block mx-auto w-25"
@@ -154,7 +185,7 @@ class Register extends Component {
                             />
                         </div>
                         <div className="my-3">
-                            <label className="d-block text-center"htmlFor="name">Name</label>
+                            <label className="d-block text-center" htmlFor="name">Name</label>
                             <input
                                 id="name"
                                 className="d-block mx-auto w-25"
@@ -172,11 +203,13 @@ class Register extends Component {
                                     onChange={this.handlePwdChange}
                                     type={this.state.passwordType}
                                 />
-                                <FontAwesomeIcon icon={pwdIcon} className="col-2 my-auto" onClick={this.togglePasswordType} />
+                                <FontAwesomeIcon icon={pwdIcon} className="col-2 my-auto"
+                                                 onClick={this.togglePasswordType}/>
                             </div>
                         </div>
                         <div className="my-3">
-                            <label className="d-block text-center" htmlFor="password_verify">Verify your password</label>
+                            <label className="d-block text-center" htmlFor="password_verify">Verify your
+                                password</label>
                             <div className="row w-25 mx-auto">
                                 <input
                                     id="password_verify"
@@ -184,7 +217,8 @@ class Register extends Component {
                                     onChange={this.handlePwdVerifyChange}
                                     type={this.state.passwordVerifyType}
                                 />
-                                <FontAwesomeIcon icon={pwdIcon} className="col-2 my-auto" onClick={this.togglePasswordVerifyType} />
+                                <FontAwesomeIcon icon={pwdIcon} className="col-2 my-auto"
+                                                 onClick={this.togglePasswordVerifyType}/>
                             </div>
                         </div>
                         <div className="text-center">

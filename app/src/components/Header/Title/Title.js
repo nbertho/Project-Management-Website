@@ -2,6 +2,9 @@ import react, {Component} from "react";
 
 class Title extends Component {
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let username = "Not logged-in";

@@ -13,6 +13,9 @@ import {
 
 class NewTask extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
 
@@ -38,10 +41,16 @@ class NewTask extends Component {
 
     }
 
+    /**
+     * Toggle the collapse property of the state
+     */
     toggleCollapse() {
         this.setState({collapse: !this.state.collapse})
     }
 
+    /**
+     * Reset the state
+     */
     resetState() {
         this.setState({
             task_id: "",
@@ -54,6 +63,9 @@ class NewTask extends Component {
         });
     }
 
+    /**
+     * Fetch the API to create a task and update the parent state
+     */
     createTask() {
 
         const taskRequestBody = {
@@ -84,8 +96,7 @@ class NewTask extends Component {
                             token: data.content.task_token
                         });
                         this.resetState();
-                    }
-                    else {
+                    } else {
                         alert(data.msg)
                     }
                 },
@@ -98,41 +109,59 @@ class NewTask extends Component {
 
     }
 
+    /**
+     * Handle task name change
+     * @param event
+     */
     handleNameChange(event) {
         this.setState({task_name: event.target.value, dataHasChanged: true});
     }
 
+    /**
+     * Handle task description change
+     * @param event
+     */
     handleDescriptionChange(event) {
         this.setState({task_description: event.target.value, dataHasChanged: true});
     }
 
+    /**
+     * Handle task priority change
+     * @param event
+     */
     handlePriorityChange(event) {
         this.setState({task_priority: event.target.value, dataHasChanged: true});
     }
 
+    /**
+     * Handle task estimated-time change
+     * @param event
+     */
     handleEtChange(event) {
         this.setState({task_et: event.target.value, dataHasChanged: true});
     }
 
-
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let cssClass = `Task card col-2 offset-0`;
-        let collapseData =  <div>
-                                <button onClick={this.resetState} className="btn btn-danger mx-1">
-                                    <FontAwesomeIcon icon={faUndo} />
-                                </button>
-                                <button onClick={this.createTask} className="btn btn-success mx-1">
-                                    <FontAwesomeIcon icon={faCheck} />
-                                </button>
-                            </div>
+        let collapseData = <div>
+            <button onClick={this.resetState} className="btn btn-danger mx-1">
+                <FontAwesomeIcon icon={faUndo}/>
+            </button>
+            <button onClick={this.createTask} className="btn btn-success mx-1">
+                <FontAwesomeIcon icon={faCheck}/>
+            </button>
+        </div>
 
         // Collapse Action
-        let collapseAction = <FontAwesomeIcon icon={faChevronDown} />
+        let collapseAction = <FontAwesomeIcon icon={faChevronDown}/>
         let cssContent = "";
 
         if (this.state.collapse) {
-            collapseAction = <FontAwesomeIcon icon={faChevronUp} />
+            collapseAction = <FontAwesomeIcon icon={faChevronUp}/>
             collapseData = <h5 className="my-auto cursor-hover" onClick={this.toggleCollapse}>+ New Task</h5>;
             cssContent = "d-none";
         }
@@ -151,20 +180,26 @@ class NewTask extends Component {
 
                     <div className={cssContent}>
 
-                        <input id="task_name" className="py-2" name="task_name" placeholder="Task name" value={this.state.task_name} type="text" onChange={this.handleNameChange} />
+                        <input id="task_name" className="py-2" name="task_name" placeholder="Task name"
+                               value={this.state.task_name} type="text" onChange={this.handleNameChange}/>
 
                         <div className="TaskDescription">
-                            <input className="w-100 my-2" id="task_description" placeholder="Task description" name="task_description" value={this.state.task_description} type="text" onChange={this.handleDescriptionChange} />
+                            <input className="w-100 my-2" id="task_description" placeholder="Task description"
+                                   name="task_description" value={this.state.task_description} type="text"
+                                   onChange={this.handleDescriptionChange}/>
                         </div>
 
                         <div className="TaskInfo my-4 row">
                             <div className="col-6">
-                                <p>Estimated-time</p>
-                                <input className="w-100" id="task_et" name="task_et" value={this.state.task_et} type="number" onChange={this.handleEtChange} />
+                                <p>Estimated time</p>
+                                <input className="w-100" id="task_et" name="task_et" value={this.state.task_et}
+                                       type="number" onChange={this.handleEtChange}/>
                             </div>
                             <div className="col-6">
                                 <p>Priority</p>
-                                <input className="w-100" id="task_priority" name="task_priority" value={this.state.task_priority} type="number" onChange={this.handlePriorityChange} />
+                                <input className="w-100" id="task_priority" name="task_priority"
+                                       value={this.state.task_priority} type="number"
+                                       onChange={this.handlePriorityChange}/>
                             </div>
                         </div>
                     </div>

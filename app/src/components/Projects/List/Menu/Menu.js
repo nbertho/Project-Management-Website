@@ -4,6 +4,9 @@ import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 
 class Menu extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
 
@@ -28,6 +31,9 @@ class Menu extends Component {
         this.returnToProjectIndex = this.returnToProjectIndex.bind(this);
     }
 
+    /**
+     * Update the menu filter
+     */
     updateParentFilter() {
         this.props.updateFilter({
             value: this.state.optionSelected,
@@ -35,19 +41,34 @@ class Menu extends Component {
         })
     }
 
+    /**
+     * Handle filter value change
+     * @param event
+     */
     handleValueChange(event) {
-        this.setState( { optionSelected: event.target.value}, () => this.updateParentFilter());
+        this.setState({optionSelected: event.target.value}, () => this.updateParentFilter());
     }
 
+    /**
+     * Handle filter order change
+     * @param e
+     */
     handleOrderChange(e) {
         this.setState({order: e.target.value}, () => this.updateParentFilter());
     }
 
+    /**
+     * Redirect to project index
+     * @param e
+     */
     returnToProjectIndex(e) {
         e.preventDefault();
         this.props.updateShowProject(false)
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let cssClass = "Menu mt-2 container mx-auto row";

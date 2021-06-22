@@ -4,6 +4,9 @@ import {faCheck, faTimes} from "@fortawesome/free-solid-svg-icons";
 
 class NewProject extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
 
@@ -21,10 +24,16 @@ class NewProject extends Component {
         this.toggleActive = this.toggleActive.bind(this);
     }
 
+    /**
+     * Toggle the active property
+     */
     toggleActive() {
         this.setState({active: !this.state.active})
     }
 
+    /**
+     * Fetch the API to add a project and add it to the parent state
+     */
     addProject() {
 
         const taskRequestBody = {
@@ -60,29 +69,44 @@ class NewProject extends Component {
             )
     }
 
+    /**
+     * Handle project name change
+     * @param e
+     */
     handleNameChange(e) {
         this.setState({project_name: e.target.value});
     }
 
+    /**
+     * Handle project description change
+     * @param e
+     */
     handleDescriptionChange(e) {
         this.setState({project_description: e.target.value});
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         if (this.state.active) {
             return (
                 <tr className="SingleProject">
-                    <td><input id="project_name" name="project_name" value={this.state.project_name} type="text" onChange={this.handleNameChange}/></td>
-                    <td><input id="project_description" name="project_description" value={this.state.project_description} type="text" onChange={this.handleDescriptionChange}/></td>
+                    <td><input id="project_name" name="project_name" value={this.state.project_name} type="text"
+                               onChange={this.handleNameChange}/></td>
+                    <td><input id="project_description" name="project_description"
+                               value={this.state.project_description} type="text"
+                               onChange={this.handleDescriptionChange}/></td>
                     <td className="d-flex justify-content-around">
-                        <button onClick={this.addProject} className="btn btn-success"><FontAwesomeIcon icon={faCheck} /></button>
-                        <button onClick={this.toggleActive} className="btn btn-danger"><FontAwesomeIcon icon={faTimes} /></button>
+                        <button onClick={this.addProject} className="btn btn-success"><FontAwesomeIcon icon={faCheck}/>
+                        </button>
+                        <button onClick={this.toggleActive} className="btn btn-danger"><FontAwesomeIcon icon={faTimes}/>
+                        </button>
                     </td>
                 </tr>
             );
-        }
-        else {
+        } else {
             return (
                 <tr className="SingleProject">
                     <td onClick={this.toggleActive}><u>New Project</u></td>

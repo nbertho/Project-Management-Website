@@ -7,9 +7,12 @@ import NewTask from "../../components/Task/NewTask";
 
 class ProjectDetails extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
-        this.state= {
+        this.state = {
             project: this.props.project,
             userData: this.props.userData,
             showProject: this.props.showProject,
@@ -21,31 +24,50 @@ class ProjectDetails extends Component {
         this.sortArrayByPriority = this.sortArrayByPriority.bind(this);
     }
 
+    /**
+     * Update the task list of the state
+     * @param newTask
+     */
     updateTaskList(newTask) {
         this.setState({
             tasks: [...this.state.tasks, newTask]
         })
     }
 
+    /**
+     * Sort an array of object by name property
+     * @param a
+     * @param b
+     * @returns {number}
+     */
     sortArrayByName(a, b) {
-        if ( a.name < b.name ) {
+        if (a.name < b.name) {
             return -1;
         }
-        if ( a.name > b.name ) {
+        if (a.name > b.name) {
             return 1;
         }
     }
 
+    /**
+     * Sort an array of object by priority property
+     * @param a
+     * @param b
+     * @returns {number}
+     */
     sortArrayByPriority(a, b) {
-        if ( a.priority < b.priority ) {
+        if (a.priority < b.priority) {
             return -1;
         }
-        if ( a.priority > b.priority ) {
+        if (a.priority > b.priority) {
             return 1;
         }
         return 0;
     }
 
+    /**
+     * Get the task list from the API
+     */
     componentDidMount() {
         const taskRequestBody = {
             method: 'POST',
@@ -70,6 +92,9 @@ class ProjectDetails extends Component {
 
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let cssClass = `ProjectDetails mx-4 ${this.props.cssClass}`;
@@ -78,7 +103,8 @@ class ProjectDetails extends Component {
             return (
                 <div key={status.id} className="col-2 font-weight-bold container">
                     <h5 className="pb-1 text-center" style={{borderBottom: "3px solid " + status.color}}>
-                        {status.name} <FontAwesomeIcon data-bs-toggle="tooltip" data-bs-placement="bottom" title={status.description} icon={faQuestionCircle} />
+                        {status.name} <FontAwesomeIcon data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                       title={status.description} icon={faQuestionCircle}/>
                     </h5>
                 </div>
             )
@@ -97,7 +123,8 @@ class ProjectDetails extends Component {
         }
 
         let taskInTable = tasksList.map((task) => {
-            return <Task key={task.id} taskData={task} statusData={this.state.statusData} updateDisplayMessage={this.props.updateDisplayMessage} />
+            return <Task key={task.id} taskData={task} statusData={this.state.statusData}
+                         updateDisplayMessage={this.props.updateDisplayMessage}/>
         })
 
         return (
@@ -106,7 +133,8 @@ class ProjectDetails extends Component {
                     {statusTable}
                 </div>
                 <br/>
-                <NewTask updateTaskList={this.updateTaskList} projectData={this.props.project} updateDisplayMessage={this.props.updateDisplayMessage} />
+                <NewTask updateTaskList={this.updateTaskList} projectData={this.props.project}
+                         updateDisplayMessage={this.props.updateDisplayMessage}/>
                 {taskInTable}
             </div>
         )

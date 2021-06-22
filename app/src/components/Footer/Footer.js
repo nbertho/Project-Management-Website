@@ -1,5 +1,10 @@
 import react from "react";
 
+/**
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Footer = (props) => {
 
     return (

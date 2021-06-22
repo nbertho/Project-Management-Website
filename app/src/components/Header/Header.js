@@ -7,6 +7,9 @@ import Title from './Title/Title'
 
 class Header extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -16,6 +19,9 @@ class Header extends Component {
         this.logOut = this.logOut.bind(this);
     }
 
+    /**
+     * Clear the cookies and reset the state
+     */
     logOut() {
         let confirmLogout = window.confirm("Are you sure you want to log-out?");
         if (confirmLogout) {
@@ -26,6 +32,9 @@ class Header extends Component {
         this.props.updateDisplayMessage(null);
     }
 
+    /**
+     * Update the state if cookies are present
+     */
     componentDidMount() {
         let userCookieData = Cookies.get("application_user_data");
         if (userCookieData !== undefined) {
@@ -33,7 +42,13 @@ class Header extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState,snapshot) {
+    /**
+     * Display fadeout message in header
+     * @param prevProps
+     * @param prevState
+     * @param snapshot
+     */
+    componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.message.content !== "") {
             let messageBox = document.getElementById("message-box");
             messageBox.classList.add("fadeout-animation");
@@ -44,6 +59,9 @@ class Header extends Component {
         }
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let logOutContent = "";
@@ -59,7 +77,8 @@ class Header extends Component {
         }
 
         if (this.state.loggedInCookie || this.props.isLogged) {
-            logOutContent = <p className="cursor-hover" onClick={this.logOut}><FontAwesomeIcon icon={faSignOutAlt} /> Log out</p>
+            logOutContent =
+                <p className="cursor-hover" onClick={this.logOut}><FontAwesomeIcon icon={faSignOutAlt}/> Log out</p>
         }
 
         return (

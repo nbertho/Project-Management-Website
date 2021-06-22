@@ -6,9 +6,12 @@ import ProjectDetails from "./ProjectDetails";
 
 class ProjectViewer extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
-        this.state= {
+        this.state = {
             projectsData: this.props.projectsData,
             statusData: [],
             userData: this.props.userData,
@@ -23,6 +26,9 @@ class ProjectViewer extends Component {
         this.updateFilter = this.updateFilter.bind(this);
     }
 
+    /**
+     * Get the status helper from the API
+     */
     componentDidMount() {
         const helperRequestBody = {
             method: 'GET',
@@ -41,20 +47,36 @@ class ProjectViewer extends Component {
             )
     }
 
+    /**
+     * @param prevProps
+     * @param prevState
+     * @param snapshot
+     */
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.projectsData !== this.props.projectsData){
+        if (prevProps.projectsData !== this.props.projectsData) {
             this.setState({projectsData: this.props.projectsData})
         }
     }
 
+    /**
+     * Update the showProject property
+     * @param projectId
+     */
     updateShowProject(projectId) {
         this.setState({showProject: projectId});
     }
 
+    /**
+     * Update the newState property
+     * @param newState
+     */
     updateFilter(newState) {
         this.setState({orderFilter: newState});
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let cssClass = "ProjectViewer pb-4";
@@ -62,19 +84,24 @@ class ProjectViewer extends Component {
         let projectTitle = "";
 
         if (!this.state.showProject) {
-            projectView = <ProjectList userData={this.state.userData} projectsData={this.props.projectsData} updateShowProject={this.updateShowProject} updateDisplayMessage={this.props.updateDisplayMessage} />;
+            projectView = <ProjectList userData={this.state.userData} projectsData={this.props.projectsData}
+                                       updateShowProject={this.updateShowProject}
+                                       updateDisplayMessage={this.props.updateDisplayMessage}/>;
             cssClass += ` container ${this.props.cssClass}`;
-        }
-        else {
-            let project = this.props.projectsData.find( project => project.project_id === this.state.showProject )
+        } else {
+            let project = this.props.projectsData.find(project => project.project_id === this.state.showProject)
             projectTitle = project.name;
-            projectView = <ProjectDetails filter={this.state.orderFilter} project={project} userData={this.props.userData} statusData={this.state.statusData} updateDisplayMessage={this.props.updateDisplayMessage} />;
+            projectView =
+                <ProjectDetails filter={this.state.orderFilter} project={project} userData={this.props.userData}
+                                statusData={this.state.statusData}
+                                updateDisplayMessage={this.props.updateDisplayMessage}/>;
             cssClass += ` mx-4 ${this.props.cssClass}`;
         }
 
         return (
             <div className={cssClass}>
-                <Menu projectTitle={projectTitle} showProject={this.state.showProject} updateShowProject={this.updateShowProject} updateFilter={this.updateFilter} />
+                <Menu projectTitle={projectTitle} showProject={this.state.showProject}
+                      updateShowProject={this.updateShowProject} updateFilter={this.updateFilter}/>
                 <br/>
                 {projectView}
                 <br/>

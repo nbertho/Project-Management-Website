@@ -5,35 +5,55 @@ import NewProject from "../../components/Projects/List/SingleProject/NewProject"
 
 class ProjectList extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
-        this.state= {
+        this.state = {
             projectsData: this.props.projectsData,
             userData: this.props.userData,
         }
         this.addProject = this.addProject.bind(this);
     }
 
+    /**
+     * Add a project to the state projectsData
+     * @param projectData
+     */
     addProject(projectData) {
-        let newProjectData = [...this.state.projectsData, projectData];
-        this.setState({projectsData: newProjectData})
+        if (projectData.project_id !== undefined) {
+            let newProjectData = [...this.state.projectsData, projectData];
+            this.setState({projectsData: newProjectData})
+        }
     }
 
+    /**
+     * @param prevProps
+     * @param prevState
+     * @param snapshot
+     */
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.projectsData !== this.props.projectsData){
+        if (prevProps.projectsData !== this.props.projectsData) {
             this.setState({projectsData: this.props.projectsData})
         }
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let cssClass = `ProjectList ${this.props.cssClass}`;
 
         let projectList = this.state.projectsData.map((project) => {
-            return <SingleProject key={project.project_id} project={project} updateShowProject={this.props.updateShowProject} removeProject={this.removeProject} updateDisplayMessage={this.props.updateDisplayMessage} />
+            return <SingleProject key={project.project_id} project={project}
+                                  updateShowProject={this.props.updateShowProject} removeProject={this.removeProject}
+                                  updateDisplayMessage={this.props.updateDisplayMessage}/>
         })
 
-        let newProject = <NewProject userData={this.props.userData} addProject={this.addProject} updateDisplayMessage={this.props.updateDisplayMessage} />
+        let newProject = <NewProject userData={this.props.userData} addProject={this.addProject}
+                                     updateDisplayMessage={this.props.updateDisplayMessage}/>
 
         return (
             <div className={cssClass}>
@@ -47,8 +67,8 @@ class ProjectList extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {newProject}
-                        {projectList}
+                    {newProject}
+                    {projectList}
                     </tbody>
                 </table>
 

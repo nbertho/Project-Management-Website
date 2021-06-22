@@ -4,6 +4,9 @@ import {faCog, faTrash, faCheck, faUndo} from "@fortawesome/free-solid-svg-icons
 
 class SingleProject extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
 
@@ -26,14 +29,25 @@ class SingleProject extends Component {
         this.removeUpdate = this.removeUpdate.bind(this);
     }
 
+    /**
+     * Handle project name change
+     * @param e
+     */
     handleNameChange(e) {
         this.setState({project_name: e.target.value, dataHasChanged: true});
     }
 
+    /**
+     * Handle project description change
+     * @param e
+     */
     handleDescriptionChange(e) {
         this.setState({project_description: e.target.value, dataHasChanged: true});
     }
 
+    /**
+     * Handle the suppression of a project with the API and hides it from the state
+     */
     handleDeleteProject() {
         let deleteConfirmed = window.confirm(`Are you sure you want to delete the project : ${this.state.project_name}?`);
         if (deleteConfirmed) {
@@ -63,6 +77,9 @@ class SingleProject extends Component {
         }
     }
 
+    /**
+     * Reset the update data of a project
+     */
     removeUpdate() {
 
         this.setState({
@@ -76,6 +93,9 @@ class SingleProject extends Component {
         })
     }
 
+    /**
+     * Toggle the update state of a project and fetch the API if needed to update it in the DB
+     */
     toggleUpdate() {
 
         if (this.state.dataHasChanged && this.state.updatePending) {
@@ -103,12 +123,15 @@ class SingleProject extends Component {
                         this.setState({error: true})
                     }
                 )
-        }
-        else {
+        } else {
             this.setState({updatePending: !this.state.updatePending});
         }
     }
 
+    /**
+     * Show project details
+     * @param e
+     */
     showProject(e) {
         e.preventDefault();
         if (!this.state.updatePending) {
@@ -116,23 +139,32 @@ class SingleProject extends Component {
         }
     }
 
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let nameData = this.state.project_name;
         let descriptionData = this.state.project_description;
         let actions =
             <td className="d-flex justify-content-around">
-                <button onClick={this.toggleUpdate} className="btn btn-light"><FontAwesomeIcon icon={faCog} /></button>
-                <button onClick={this.handleDeleteProject} className="btn btn-light"><FontAwesomeIcon icon={faTrash} /></button>
+                <button onClick={this.toggleUpdate} className="btn btn-light"><FontAwesomeIcon icon={faCog}/></button>
+                <button onClick={this.handleDeleteProject} className="btn btn-light"><FontAwesomeIcon icon={faTrash}/>
+                </button>
             </td>;
 
         if (this.state.updatePending) {
-            nameData = <input id="project_name" name="project_name" value={this.state.project_name} type="text" onChange={this.handleNameChange}/>;
-            descriptionData = <input id="project_description" name="project_description" value={this.state.project_description} type="text" onChange={this.handleDescriptionChange}/>;
+            nameData = <input id="project_name" name="project_name" value={this.state.project_name} type="text"
+                              onChange={this.handleNameChange}/>;
+            descriptionData =
+                <input id="project_description" name="project_description" value={this.state.project_description}
+                       type="text" onChange={this.handleDescriptionChange}/>;
             actions =
                 <td className="d-flex justify-content-around">
-                    <button onClick={this.toggleUpdate} className="btn btn-success"><FontAwesomeIcon icon={faCheck} /></button>
-                    <button onClick={this.removeUpdate} className="btn btn-danger"><FontAwesomeIcon icon={faUndo} /></button>
+                    <button onClick={this.toggleUpdate} className="btn btn-success"><FontAwesomeIcon icon={faCheck}/>
+                    </button>
+                    <button onClick={this.removeUpdate} className="btn btn-danger"><FontAwesomeIcon icon={faUndo}/>
+                    </button>
                 </td>;
         }
 
@@ -144,8 +176,7 @@ class SingleProject extends Component {
                     {actions}
                 </tr>
             );
-        }
-        else {
+        } else {
             return (
                 <tr className="d-none"/>
             );

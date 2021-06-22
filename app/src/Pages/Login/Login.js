@@ -3,6 +3,9 @@ import {Link} from "react-router-dom";
 
 class Login extends Component {
 
+    /**
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -16,14 +19,26 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /**
+     * Handle mail input change
+     * @param event
+     */
     handleMailChange(event) {
         this.setState({loginMail: event.target.value});
     }
 
+    /**
+     * Handle password input change
+     * @param event
+     */
     handlePwdChange(event) {
         this.setState({loginPwd: event.target.value});
     }
 
+    /**
+     * Fetch the API to login the user and update the state if required
+     * @param event
+     */
     handleSubmit(event) {
 
         event.preventDefault();
@@ -43,9 +58,8 @@ class Login extends Component {
                 (data) => {
                     if (!data.error) {
                         this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
-                        this.props.updateAfterLogin(data.content.userData, data.content.projectsData , true);
-                    }
-                    else {
+                        this.props.updateAfterLogin(data.content.userData, data.content.projectsData, true);
+                    } else {
                         this.props.updateDisplayMessage({empty: false, error: data.error, content: data.msg});
                     }
                 },
@@ -56,7 +70,9 @@ class Login extends Component {
             )
     }
 
-
+    /**
+     * @returns {JSX.Element}
+     */
     render() {
 
         let cssClass = `Login ${this.props.cssClass}`;
@@ -68,7 +84,7 @@ class Login extends Component {
                 <br/>
                 <form className="my-3 mx-auto" onSubmit={this.handleSubmit}>
                     <div className="my-3">
-                        <label className="d-block text-center"htmlFor="email">Email</label>
+                        <label className="d-block text-center" htmlFor="email">Email</label>
                         <input
                             id="email"
                             className="d-block mx-auto"

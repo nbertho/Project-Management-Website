@@ -1,7 +1,12 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
-const HomePage = ( props ) => {
+/**
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const HomePage = (props) => {
 
     let cssClass = `HomePage ${props.cssClass}`;
 
