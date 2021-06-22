@@ -110,7 +110,7 @@ class Login extends Component {
                 <br/>
                 <div>
                     <p className="text-center mb-1">
-                        <small>Otherwise you can register <Link to="/register">here</Link></small>
+                        <small>You can also register <Link to="/register">here</Link></small>
                     </p>
                 </div>
             </div>

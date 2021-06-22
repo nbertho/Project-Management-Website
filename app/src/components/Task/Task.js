@@ -329,7 +329,7 @@ class Task extends Component {
 
                         <div className="TaskInfo my-4 row">
                             <div className="col-6">
-                                <p>Estimated-time</p>
+                                <p>Estim time</p>
                                 {etContent}
                             </div>
                             <div className="col-6">
